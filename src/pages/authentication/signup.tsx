@@ -1,6 +1,6 @@
 import AuthLogo from "@/assets/AuthLogo";
-import Input from "@/component/ui/form-elements/input";
-import PasswordInput from "@/component/ui/form-elements/password-input";
+import Input from "@/component/ui/molecules/input";
+import PasswordInput from "@/component/ui/molecules/password-input";
 import { useRegistrationUserMutation } from "@/features/auth/auth-api";
 import { Checkbox } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
@@ -183,7 +183,7 @@ const SignUp = () => {
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"

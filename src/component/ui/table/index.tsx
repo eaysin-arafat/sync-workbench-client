@@ -20,11 +20,11 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
   return (
     <table className="w-full table-auto">
       <thead>
-        <tr className="bg-gray-2 text-left dark:bg-meta-4">
+        <tr className="bg-secondaryBg text-left">
           {columns.map((column, index) => (
             <th
               key={index}
-              className="py-3 px-4 font-medium text-black dark:text-white cursor-pointer"
+              className="py-3 px-4 font-medium text-textColor cursor-pointer text-sm rounded-md"
               style={{
                 minWidth: column?.width ? `${column?.width}px` : "200px",
               }}
@@ -36,7 +36,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
             </th>
           ))}
           {actions && (
-            <th className="py-3 px-4 font-medium text-black dark:text-white">
+            <th className="py-3 px-4 font-medium text-textColor text-sm">
               Actions
             </th>
           )}
@@ -46,10 +46,10 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
         {data?.map((item, key) => (
           <tr
             key={key}
-            className={`${
+            className={`text-textColor ${
               data.length === key + 1
                 ? "!border-none"
-                : "border-b border-[#eee]"
+                : "border-b border-stroke"
             }`}
           >
             {columns.map((column, colIndex) => (

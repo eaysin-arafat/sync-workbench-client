@@ -1,7 +1,7 @@
 import showToast from "@/component/ui/alert-message";
-import Input from "@/component/ui/form-elements/input";
-import MultiSelect from "@/component/ui/form-elements/multi-step";
-import Select from "@/component/ui/form-elements/select";
+import Input from "@/component/ui/molecules/input";
+import MultiSelect from "@/component/ui/molecules/multi-select";
+import Select from "@/component/ui/molecules/select";
 import { useCreateDepartmentMutation } from "@/features/department/department-api";
 import { useReadEmployeesQuery } from "@/features/employee/employee-api";
 import { Button } from "@mantine/core";

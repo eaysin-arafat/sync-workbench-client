@@ -36,16 +36,16 @@ const Sidebar = ({
   return (
     <div className="h-screen">
       <aside
-        className={`overflow-y-auto shadow-lg bg-white h-[94%] pb-5 transition-all duration-300 ease-in-out fixed lg:static z-50 w-[280px]  ${
+        className={`overflow-y-auto shadow-lg bg-bgColor h-[94%] pb-5 transition-all duration-300 ease-in-out fixed lg:static z-50 w-[280px]  ${
           sidebarOpen ? "ms-[0px]" : "ms-[-280px]"
         }`}
       >
-        <nav aria-label="Main" className="space-y-2">
+        <nav aria-label="Main" className="space-y-1">
           {sidebarMenu?.map((item) => (
             <div key={item?.id}>
               <div
                 onClick={() => toggleMenu(item?.id, item?.link)}
-                className={`flex items-center p-2 transition-colors hover:bg-slate-200 space-x-3 px-5 py-2.5 cursor-pointer`}
+                className={`flex items-center p-2 transition-colors hover:bg-gray space-x-3 px-5 py-2.5 cursor-pointer text-textColor`}
               >
                 <span aria-hidden="true">
                   {item?.icon ? item?.icon : <IoIosLink />}
@@ -62,7 +62,7 @@ const Sidebar = ({
                 <div className={`mt-2 space-y-2 pl-10`}>
                   {item?.submenu?.map((subItem) => (
                     <Link
-                      className={`flex items-center p-2 transition-colors rounded-sm hover:bg-slate-200 cursor-pointer`}
+                      className={`flex items-center p-2 transition-colors rounded-sm hover:bg-gray cursor-pointer text-textColor`}
                       key={subItem?.id}
                       to={subItem?.link}
                       onClick={() => {

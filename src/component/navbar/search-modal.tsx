@@ -2,7 +2,7 @@ import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import Input from "../ui/form-elements/input";
+import Input from "../ui/molecules/input";
 
 const SearchModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -27,7 +27,7 @@ const SearchModal = () => {
       </Modal>
 
       <div
-        className="bg-gray-50 text-gray-900 cursor-pointer block sm:hidden"
+        className="bg-gray text-gray-900 cursor-pointer block sm:hidden"
         onClick={open}
       >
         <IoSearchOutline size={23} />

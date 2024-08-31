@@ -3,18 +3,78 @@
 @import "tailwindcss/utilities";
 @import "@mantine/core/styles.css";
 
+:root {
+  --bgColor: #ffffff;
+  --secondaryBg: #f8f8f8;
+  --white: #ffffff;
+  --whiten: #f1f5f9;
+  --whiter: #f5f7fd;
+  --black: #1c2434;
+  --black2: #010101;
+  --textColor: #1c2434;
+  --textGray: #5f5e5b;
+
+  --body: #64748b;
+  --primary: #2280de;
+  --secondary: #2280de;
+  --stroke: #e2e8f0;
+  --formBorder: #e2e8f0;
+  --formBg: #ffffff;
+  --placeholderColor: #9ca3af;
+  --hoverColor: #f1f5f9;
+
+  --gray: #eff4fb;
+  --gray1: #f7f9fc;
+  --gray2: #fafafa;
+
+  --meta1: #dc3545;
+  --meta2: #eff2f7;
+  --meta3: #10b981;
+  --meta4: #313d4a;
+  --meta5: #259ae6;
+  --meta6: #ffba00;
+  --meta7: #ff6766;
+  --meta8: #f0950c;
+  --meta9: #e5e7eb;
+  
+  --apexchartsBorder: #eff4fb;
+  --success: #219653;
+  --danger: #d34053;
+  --warning: #ffa70b;
+}
+
+.dark {
+  /* dark Mode */
+  --bgColor: #191919;
+  --secondaryBg: #202020;
+
+  --body: #aeb7c0;
+  --body1: #dee4ee;
+  --body2: #8a99af;
+  --textColor: #d3d3d3;
+  --textGray: #9b9b9b;
+  --hoverColor: #27272a;
+
+  --apexchartsBorder: #313d4a;
+
+  --stroke: #272727;
+  --gray: #333a48;
+  --formBorder: #272727;
+  --formBg: #1d2a39;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #fcfcfc;
+  background: var(--bgColor);
   border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(223, 223, 223);
+  background: var(--gray);
   border-radius: 0px;
 }
 
@@ -47,16 +107,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* third-party libraries CSS */
 .apexcharts-legend-text {
-  @apply !text-body dark:!text-bodydark;
+  @apply !text-body;
 }
 .apexcharts-text {
-  @apply !fill-body dark:!fill-bodydark;
+  @apply !fill-body;
 }
 .apexcharts-xcrosshairs {
-  @apply !fill-stroke dark:!fill-strokedark;
+  @apply !fill-stroke;
 }
 .apexcharts-gridline {
-  @apply !stroke-stroke dark:!stroke-strokedark;
+  @apply !stroke-stroke;
 }
 .apexcharts-series.apexcharts-pie-series path {
   @apply dark:!stroke-transparent;
@@ -65,23 +125,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   @apply !inline-flex gap-1.5;
 }
 .apexcharts-tooltip.apexcharts-theme-light {
-  @apply dark:!border-strokedark dark:!bg-boxdark;
+  @apply dark:!border-stroke dark:!bg-bgColor;
 }
 .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
-  @apply dark:!border-strokedark dark:!bg-meta-4;
+  @apply dark:!border-stroke dark:!bg-meta4;
 }
 .apexcharts-xaxistooltip,
 .apexcharts-yaxistooltip {
-  @apply dark:!border-meta-4 dark:!bg-meta-4 dark:!text-bodydark1;
+  @apply dark:!border-meta4 dark:!bg-meta4 dark:!text-textColor;
 }
 .apexcharts-xaxistooltip-bottom:after {
-  @apply !border-b-gray dark:!border-b-meta-4;
+  @apply !border-b-apexchartsBorder;
 }
 .apexcharts-xaxistooltip-bottom:before {
-  @apply !border-b-gray dark:!border-b-meta-4;
+  @apply !border-b-gray;
 }
 .apexcharts-xaxistooltip-bottom {
-  @apply !rounded !border-none !bg-gray !text-xs !font-medium !text-black dark:!text-white;
+  @apply !rounded !border-none !bg-gray !text-xs !font-medium !text-black;
 }
 .apexcharts-tooltip-series-group {
   @apply !pl-1.5;

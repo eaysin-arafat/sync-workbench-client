@@ -1,5 +1,5 @@
-import { Button } from "@mantine/core";
-import Breadcrumb from "../breadcrumbs";
+import Button from "../../atoms/button";
+import Typography from "../../atoms/typography";
 
 type Props = {
   pageTitle: string;
@@ -10,11 +10,11 @@ type Props = {
 
 const PageHeader = ({ pageTitle, btnLabel, hasAddButton, onClick }: Props) => {
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-5">
-      <Breadcrumb pageName={pageTitle} />
+    <div className="flex flex-row items-start md:items-center justify-between gap-3 pb-5">
+      <Typography variant="h4">{pageTitle}</Typography>
 
       {hasAddButton && (
-        <Button variant="primary" onClick={onClick}>
+        <Button variant="primary" size="sm" onClick={onClick}>
           {btnLabel}
         </Button>
       )}

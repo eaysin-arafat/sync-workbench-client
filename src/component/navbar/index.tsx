@@ -13,13 +13,13 @@ const Navbar = ({
   sidebarOpen: boolean;
 }) => {
   return (
-    <nav className="flex items-center justify-between px-3 flex-grow bg-white z-50 py-3 border-b border-stroke relative">
+    <nav className="flex items-center justify-between px-3 flex-grow bg-bgColor z-50 py-3 border-b border-stroke relative">
       <div
         className={`flex justify-start items-center gap-7 transition-all duration-300 ease-in-out lg:w-[380px]`}
       >
         <MdLegendToggle
           size={33}
-          className="hover:bg-slate-200 cursor-pointer p-1.5"
+          className="hover:bg-bgColor text-textColor cursor-pointer p-1.5"
           onClick={toggleSidebar}
         />
 

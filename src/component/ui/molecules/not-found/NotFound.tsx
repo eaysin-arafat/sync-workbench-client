@@ -1,4 +1,5 @@
 import { styles } from "@/utils/cn";
+import Typography from "../../atoms/typography";
 
 // Not Found Component props
 type Props = {
@@ -15,7 +16,9 @@ function NotFound({ messages, className = "" }: Props) {
         className
       )}
     >
-      <h3>{messages ? messages : "No Recorded Data Yet to Show"}</h3>
+      <Typography variant="h4">
+        {messages ? messages : "No Recorded Data Yet to Show"}
+      </Typography>
     </div>
   );
 }

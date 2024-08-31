@@ -23,10 +23,12 @@ const DropdownUser = () => {
         to="#"
       >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
+          <span className="block text-sm font-medium text-textColor capitalize">
             {user?.first_name} {user?.last_name}
           </span>
-          <span className="block text-xs">{user?.position_title}</span>
+          <span className="block text-xs text-textGray">
+            {user?.position_title}
+          </span>
         </span>
 
         <span className="h-8 w-8 rounded-full">
@@ -53,13 +55,13 @@ const DropdownUser = () => {
       {/* <!-- Dropdown Start --> */}
       {dropdownOpen && (
         <div
-          className={`absolute right-0 mt-3 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
+          className={`absolute right-0 mt-3 flex w-62.5 flex-col rounded-sm border border-stroke bg-secondaryBg shadow-default`}
         >
-          <ul className="flex flex-col gap-4 border-b border-stroke px-6 py-4 dark:border-strokedark">
+          <ul className="flex flex-col gap-4 border-b border-stroke px-6 py-4">
             <li>
               <Link
                 to="/profile"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-textColor hover:text-primary lg:text-base"
               >
                 <CgProfile size={17} />
                 My Profile
@@ -68,7 +70,7 @@ const DropdownUser = () => {
             <li>
               <Link
                 to="#"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary"
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-textColor hover:text-primary"
               >
                 <GrContact />
                 My Contacts
@@ -77,7 +79,7 @@ const DropdownUser = () => {
             <li>
               <Link
                 to="/settings"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary"
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-textColor hover:text-primary"
               >
                 <MdAccountCircle size={18} />
                 Account Settings
@@ -85,7 +87,7 @@ const DropdownUser = () => {
             </li>
           </ul>
           <button
-            className="flex items-center gap-3.5 px-6 py-2 text-sm font-medium duration-300 ease-in-out hover:text-primary"
+            className="flex items-center gap-3.5 px-6 py-2 text-sm font-medium duration-300 ease-in-out text-textColor hover:text-primary"
             onClick={() => dispatch(logout())}
           >
             <BiLogOut />

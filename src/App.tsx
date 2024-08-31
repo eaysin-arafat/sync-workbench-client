@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router-dom";
-import Loader from "./component/ui/loader/loader";
+import Loader from "./component/ui/atoms/loader/loader";
 import useAuthCheck from "./hooks/auth/useAuthCheck";
 import router from "./routes";
 

@@ -1,17 +1,24 @@
-import Input from "@/component/ui/form-elements/input";
-import DefaultModal from "@/component/ui/modal";
-import PageHeader from "@/component/ui/page-header";
+import Input from "@/component/ui/molecules/input";
+import Modal from "@/component/ui/molecules/modal";
+import PageHeader from "@/component/ui/molecules/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import { useReadDepartmentsQuery } from "@/features/department/department-api";
 import { QueryParams } from "@/utils/get-query-params";
 import { Button } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
 import CreateDepartment from "./create";
 import DepartmentTable from "./table/table";
 
 const Department = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-  // const [searchParams, setSearchParams] = useState({
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  }; // const [searchParams, setSearchParams] = useState({
   //   departmentId: "",
   //   departmentName: "",
   // });
@@ -62,7 +69,7 @@ const Department = () => {
         pageTitle="Department"
         hasAddButton
         btnLabel="Add New Department"
-        onClick={open}
+        onClick={() => setIsModalOpen(true)}
       />
 
       <div className="grid md:grid-cols-3 items-center gap-2 pb-2 md:pb-4">
@@ -74,14 +81,17 @@ const Department = () => {
       <DepartmentTable departments={departments?.data || []} />
       <CustomPagination />
 
-      <DefaultModal
-        size={"2xl"}
-        opened={opened}
-        onClose={close}
-        title="Add Department"
+      <Modal
+        isOpen={isModalOpen}
+        handleClose={handleCloseModal}
+        setOpenModal={setIsModalOpen}
+        // isOpen={isModalOpen}
+        // onClose={() => setIsModalOpen(false)}
+        // title="Large Modal"
+        // size="lg" // Specify the size here
       >
         <CreateDepartment onClose={close} />
-      </DefaultModal>
+      </Modal>
     </div>
   );
 };
