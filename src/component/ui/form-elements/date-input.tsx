@@ -31,7 +31,7 @@ const DateInput = (props: Props) => {
     readOnly = false,
     onClick,
     id,
-    height = "45px",
+    height,
   } = props;
 
   return (

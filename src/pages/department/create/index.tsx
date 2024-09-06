@@ -1,145 +1,84 @@
-import showToast from "@/component/ui/alert-message";
-import Input from "@/component/ui/molecules/input";
-import MultiSelect from "@/component/ui/molecules/multi-select";
-import Select from "@/component/ui/molecules/select";
-import { useCreateDepartmentMutation } from "@/features/department/department-api";
-import { useReadEmployeesQuery } from "@/features/employee/employee-api";
+import { ControlledInput } from "@/component/ui/form-elements/input";
+import { ControlledMultiSelect } from "@/component/ui/form-elements/multi-select";
+import { ControlledSelect } from "@/component/ui/form-elements/select";
 import { Button } from "@mantine/core";
-import { useEffect, useState } from "react";
-
-type CreateDepartmentType = {
-  department_name: string;
-  description: string;
-  location: string;
-  manager_id: string;
-  employees: string[];
-  projects: string[];
-};
-
-const initialState: CreateDepartmentType = {
-  department_name: "",
-  description: "",
-  location: "",
-  manager_id: "",
-  projects: [],
-  employees: [],
-};
+import useCreate from "./useCreate";
 
 const CreateDepartment = ({ onClose }: { onClose: () => void }) => {
-  const [formState, setFormState] = useState<CreateDepartmentType>({
-    ...initialState,
-  });
-
-  const [createDepartment, { isError, isSuccess, error }] =
-    useCreateDepartmentMutation();
-  const { data: employees } = useReadEmployeesQuery({});
-  const employeesOptions = employees?.data?.map((employee) => ({
-    value: String(employee?.id),
-    label: employee?.attributes?.user_info?.data?.attributes?.username,
-  }));
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSelectChange = (name: string) => (data: any) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: data,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    createDepartment({
-      data: {
-        ...formState,
-        employees: formState?.employees?.map((employee) => Number(employee)),
-        manager_id: Number(formState?.manager_id),
-        projects: formState?.projects?.map((project) => Number(project)),
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (isError) {
-      showToast({ type: "error", message: "Error creating department" });
-    }
-
-    if (isSuccess) {
-      showToast({
-        type: "success",
-        message: "Department has been Created successfully",
-      });
-
-      onClose();
-      setFormState(initialState);
-    }
-  }, [isSuccess, isError]);
+  const {
+    control,
+    errors,
+    handleSubmit,
+    onSubmit,
+    employeesOptions,
+    isLoading,
+  } = useCreate(onClose);
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div className="grid md:grid-cols-2 gap-5">
-          <Input
-            label="Name"
-            name="department_name"
-            type="text"
-            value={formState.department_name}
-            onChange={handleChange}
-          />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="grid md:grid-cols-2 gap-4">
+        <ControlledInput
+          control={control}
+          name="department_name"
+          label="Department Name"
+          placeholder="Enter Department Name"
+          errMsg={errors.department_name?.message}
+          required
+        />
 
-          <Input
-            label="Description"
-            name="description"
-            type="text"
-            value={formState.description || ""}
-            onChange={handleChange}
-          />
+        <ControlledInput
+          name="description"
+          control={control}
+          label="Description"
+          errMsg={errors.description?.message}
+        />
 
-          <Input
-            label="Location"
-            name="location"
-            type="text"
-            value={formState.location || ""}
-            onChange={handleChange}
-          />
+        <ControlledInput
+          name="location"
+          control={control}
+          label="Location"
+          errMsg={errors.location?.message}
+        />
 
-          <Select
-            value={formState?.manager_id}
-            label="Add Manager"
-            onChange={handleSelectChange("manager_id")}
-            options={employeesOptions}
-          />
+        <ControlledSelect
+          name="manager"
+          control={control}
+          label="Add Manager"
+          options={employeesOptions || []}
+          errMsg={errors.manager?.message}
+          required
+        />
 
-          <MultiSelect
-            value={formState?.projects}
+        <div className="col-span-full">
+          <ControlledMultiSelect
+            name="projects"
+            control={control}
             label="Add Project"
-            onChange={handleSelectChange("projects")}
+            options={[{ label: "data", value: "1" }]}
+            errMsg={errors.projects?.message}
           />
+        </div>
 
-          <MultiSelect
-            label="Add New Employee"
+        <div className="col-span-full">
+          <ControlledMultiSelect
             name="employees"
+            control={control}
             placeholder="Search New Employee"
-            value={formState?.employees}
-            onChange={handleSelectChange("employees")}
-            options={employeesOptions}
+            options={employeesOptions || []}
+            errMsg={errors.employees?.message}
+            label="Add New Employee"
           />
         </div>
-        <div className="flex items-center gap-5 justify-end py-2 pt-5">
-          <Button type="submit">Submit</Button>
-          <Button variant="default" onClick={onClose}>
-            Close
-          </Button>
-        </div>
-      </form>
-    </>
+      </div>
+      <div className="flex items-center gap-5 justify-end py-2 pt-5">
+        <Button type="submit" loading={isLoading}>
+          Submit
+        </Button>
+        <Button variant="default" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+    </form>
   );
 };
 

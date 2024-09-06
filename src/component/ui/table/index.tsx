@@ -1,5 +1,6 @@
 import React from "react";
 import { TbArrowsSort } from "react-icons/tb";
+import Checkbox from "../form-elements/checkbox";
 
 // Define types for the column and data props
 export interface TableColumn {
@@ -18,13 +19,16 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
   return (
-    <table className="w-full table-auto">
+    <table className="w-full table-auto bg-bgColor">
       <thead>
         <tr className="bg-secondaryBg text-left">
+          <th className="py-3 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
+            <Checkbox />
+          </th>
           {columns.map((column, index) => (
             <th
               key={index}
-              className="py-3 px-4 font-medium text-textColor cursor-pointer text-sm rounded-md"
+              className="py-3 px-4 font-semibold text-textColor cursor-pointer text-sm rounded-md"
               style={{
                 minWidth: column?.width ? `${column?.width}px` : "200px",
               }}
@@ -36,7 +40,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
             </th>
           ))}
           {actions && (
-            <th className="py-3 px-4 font-medium text-textColor text-sm">
+            <th className="py-3 px-16 font-semibold text-textColor text-sm">
               Actions
             </th>
           )}
@@ -52,6 +56,12 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
                 : "border-b border-stroke"
             }`}
           >
+            {actions && (
+              <td className="py-5 px-8">
+                <Checkbox />
+              </td>
+            )}
+
             {columns.map((column, colIndex) => (
               <td key={colIndex} className={`py-3 px-4`}>
                 {column?.render
@@ -59,7 +69,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
                   : item?.[column?.accessor] || ""}
               </td>
             ))}
-            {actions && <td className="py-5 px-4">{actions(item)}</td>}
+            {actions && <td className="py-5 px-16">{actions(item)}</td>}
           </tr>
         ))}
       </tbody>

@@ -71,10 +71,8 @@ const DepartmentTable = ({
     };
   });
 
-  console.log(departments);
-
   return (
-    <div className="rounded-sm bg-white px-5 pt-6 shadow-1 dark:border-strokedark dark:bg-boxdark">
+    <div className="rounded-sm bg-bgColor pt-6 shadow-1">
       <div className="max-w-full overflow-x-auto">
         <Table
           columns={columns}

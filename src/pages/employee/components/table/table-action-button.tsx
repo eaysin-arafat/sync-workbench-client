@@ -1,6 +1,4 @@
 const TableActionBtn = ({ data }: { data: unknown }) => {
-  console.log(data);
-
   return (
     <div className="flex items-center space-x-3.5">
       <button className="hover:text-primary">

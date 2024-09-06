@@ -51,8 +51,6 @@ const columns = [
     header: "Employee Status",
     accessor: "employee_status",
     render: (item: any) => {
-      console.log("status", item?.employee_status);
-
       return (
         <p
           className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
@@ -95,37 +93,30 @@ const EmployeeTable = ({
   employees: EntityAttributes<EmployeeType>[];
 }) => {
   const tableData = employees?.map((employee) => {
-    const { first_name, last_name, username, email, position_title } =
-      employee?.attributes?.user_info?.data?.attributes;
-    const {
-      date_of_hire,
-      salary,
-      employment_status,
-      employee_status,
-      is_internship,
-    } = employee?.attributes;
+    const userInfo = employee?.attributes?.user_info?.data?.attributes;
+    const employeeInfo = employee?.attributes;
 
     return {
       id: employee?.attributes?.identity,
       name: {
-        first_name,
-        last_name,
+        first_name: userInfo?.first_name,
+        last_name: userInfo?.last_name,
       },
-      username,
-      email,
-      date_of_hire,
-      salary,
+      username: userInfo?.username,
+      email: userInfo?.email,
+      date_of_hire: employeeInfo?.date_of_hire,
+      salary: employeeInfo?.salary,
       role: "",
-      employment_status,
-      employee_status,
-      is_internship,
-      position_title,
+      employment_status: employeeInfo?.employment_status,
+      employee_status: employeeInfo?.employment_status,
+      is_internship: employeeInfo?.is_internship,
+      position_title: employeeInfo?.position_id,
       department: "",
       manager: "",
     };
   });
 
-  console.log(tableData);
+  console.log(employees);
 
   return (
     <div className="rounded-sm bg-bgColor pt-6 shadow-1">

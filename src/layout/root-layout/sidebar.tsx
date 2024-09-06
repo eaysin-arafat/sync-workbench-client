@@ -31,7 +31,7 @@ const Sidebar = ({
     } else {
       setSidebarOpen(true);
     }
-  }, [W1024]);
+  }, [W1024, setSidebarOpen]);
 
   return (
     <div className="h-screen">
@@ -45,7 +45,7 @@ const Sidebar = ({
             <div key={item?.id}>
               <div
                 onClick={() => toggleMenu(item?.id, item?.link)}
-                className={`flex items-center p-2 transition-colors hover:bg-gray space-x-3 px-5 py-2.5 cursor-pointer text-textColor`}
+                className={`flex items-center p-2 transition-colors hover:bg-gray space-x-3 px-5 pl-6.5 py-2.5 cursor-pointer text-textColor`}
               >
                 <span aria-hidden="true">
                   {item?.icon ? item?.icon : <IoIosLink />}

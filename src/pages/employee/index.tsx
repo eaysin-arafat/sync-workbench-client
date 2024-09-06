@@ -1,28 +1,35 @@
-import Button from "@/component/ui/atoms/button";
-import Input from "@/component/ui/molecules/input";
-import DefaultModal from "@/component/ui/molecules/modal";
-import PageHeader from "@/component/ui/molecules/page-header";
-import Select from "@/component/ui/molecules/select";
+import Button from "@/component/ui/button";
+import Input from "@/component/ui/form-elements/input";
+import Select from "@/component/ui/form-elements/select";
+import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import { useReadEmployeesQuery } from "@/features/employee/employee-api";
+import { useModal } from "@/hooks/modal/useModal";
 import { QueryParams } from "@/utils/get-query-params";
-import { useState } from "react";
 import CreateEmployee from "./components/create";
 import EmployeeTable from "./components/table/table";
 
 const Employee = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal, closeModal, ModalComponent } = useModal();
 
   const options = [
-    { label: "Frontend Developer", value: 1 },
-    { label: "Backend Developer", value: 2 },
-    { label: "UX & UI Developer", value: 3 },
+    { label: "Frontend Developer", value: "1" },
+    { label: "Backend Developer", value: "2" },
+    { label: "UX & UI Developer", value: "3" },
   ];
 
   const queryParams: QueryParams = {
     sort: ["date_of_hire:asc"],
     populate: {
       user_info: {
+        fields: ["username"],
+        populate: {
+          avatar: {
+            fields: ["url"],
+          },
+        },
+      },
+      manager: {
         fields: ["username"],
         populate: {
           avatar: {
@@ -41,7 +48,7 @@ const Employee = () => {
         pageTitle="Employee"
         hasAddButton
         btnLabel="Add New Employee"
-        onClick={() => setIsModalOpen(true)}
+        onClick={openModal}
       />
 
       <div className="grid md:grid-cols-4 items-center gap-2">
@@ -49,7 +56,7 @@ const Employee = () => {
         <Input placeholder="Employee Name" />
         <Select options={options} placeholder="Select Position" />
         <div className="h-full">
-          <Button variant="primary" size="sm" fullWidth>
+          <Button size="sm" fullWidth>
             Search
           </Button>
         </div>
@@ -58,14 +65,9 @@ const Employee = () => {
       <EmployeeTable employees={employees?.data || []} />
       <CustomPagination />
 
-      <DefaultModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Large Modal"
-        size="lg" // Specify the size here
-      >
-        <CreateEmployee onClose={close} />
-      </DefaultModal>
+      <ModalComponent title="Authentication" size={"70rem"}>
+        <CreateEmployee onClose={closeModal} />
+      </ModalComponent>
     </div>
   );
 };

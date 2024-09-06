@@ -11,7 +11,7 @@ const departmentApi = API.injectEndpoints({
      * @method POST
      */
     createDepartment: builder.mutation({
-      query: (body: { data: DepartmentType }) => ({
+      query: (body) => ({
         url: `/departments`,
         method: "POST",
         body,
@@ -67,6 +67,18 @@ const departmentApi = API.injectEndpoints({
       }),
       invalidatesTags: ["Department"],
     }),
+    /**
+     * @description check if department name is unique
+     * @uri /departments/check-name
+     * @method GET
+     */
+    checkDepartmentName: builder.query({
+      query: (name: string) => ({
+        url: `/unique-name/department?name=${name}`,
+        method: "GET",
+      }),
+      providesTags: [], // Add relevant tags if necessary
+    }),
   }),
 });
 
@@ -77,6 +89,7 @@ export const {
   useReadDepartmentByIdQuery,
   useUpdateDepartmentMutation,
   useDeleteDepartmentMutation,
+  useCheckDepartmentNameQuery,
 } = departmentApi;
 
 // Export API endpoints

@@ -1,11 +1,15 @@
-import Breadcrumb from "@/component/ui/breadcrumbs";
+import PageHeader from "@/component/ui/page-header";
 import userThree from "../images/user/user-03.png";
 
 const Settings = () => {
   return (
     <>
       <div className="mx-auto max-w-270">
-        <Breadcrumb pageName="Settings" />
+        <PageHeader
+          pageTitle="Settings"
+          hasAddButton
+          btnLabel="Add New Department"
+        />
 
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">

@@ -19,7 +19,6 @@ const showToast = ({
   message,
   duration = 4000,
   position = "top-center",
-  iconTheme,
 }: ToastOptions) => {
   toast.dismiss();
 
@@ -31,13 +30,6 @@ const showToast = ({
 
   const displayMessage = message || defaultMessages[type];
 
-  const defaultIconTheme: IconTheme = {
-    primary: "#2280de",
-    secondary: "#ffffff", // Set a reasonable default for secondary color
-  };
-
-  const finalIconTheme = iconTheme || defaultIconTheme;
-
   const toastMap = {
     success: toast.success,
     error: toast.error,
@@ -47,7 +39,6 @@ const showToast = ({
   toastMap[type](displayMessage, {
     position,
     duration,
-    iconTheme: finalIconTheme,
   });
 };
 

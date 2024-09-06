@@ -1,38 +1,34 @@
-import { Modal } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useModal } from "@/hooks/modal/useModal";
+import { Input } from "@mantine/core";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import Input from "../ui/molecules/input";
 
 const SearchModal = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [value, setValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { ModalComponent, openModal } = useModal();
 
   return (
-    <>
-      <Modal
-        opened={opened}
-        onClose={close}
-        withCloseButton={false}
-        closeOnEscape
-        styles={{
-          body: { padding: 0 },
-        }}
-      >
-        <Input
-          placeholder="Clearable input"
-          value={value}
-          onChange={(event) => setValue(event.currentTarget.value)}
-        />
-      </Modal>
+    <div
+      className="bg-gray text-gray-900 cursor-pointer block sm:hidden"
+      onClick={openModal}
+    >
+      <IoSearchOutline size={23} />
 
-      <div
-        className="bg-gray text-gray-900 cursor-pointer block sm:hidden"
-        onClick={open}
+      <ModalComponent
+        styles={{ body: { padding: 0, margin: 0 } }}
+        withCloseButton={false}
+        closeOnEscape={true}
+        closeOnClickOutside={true}
       >
-        <IoSearchOutline size={23} />
-      </div>
-    </>
+        <div className="">
+          <Input
+            placeholder="Clearable input"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.currentTarget.value)}
+          />
+        </div>
+      </ModalComponent>
+    </div>
   );
 };
 

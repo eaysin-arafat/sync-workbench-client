@@ -1,9 +1,13 @@
-import Breadcrumb from "@/component/ui/breadcrumbs";
+import PageHeader from "@/component/ui/page-header";
 
 const Calendar = () => {
   return (
     <>
-      <Breadcrumb pageName="Calendar" />
+      <PageHeader
+        pageTitle="Calendar"
+        hasAddButton
+        btnLabel="Add New Department"
+      />
 
       {/* <!-- ====== Calendar Section Start ====== --> */}
       <div className="w-full max-w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">

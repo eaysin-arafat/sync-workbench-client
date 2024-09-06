@@ -1,30 +1,31 @@
-import { Tooltip } from "@mantine/core";
-import { ReactNode } from "react";
+import { Tooltip as MantineTooltip } from "@mantine/core";
+import React from "react";
 
-interface Props {
-  children: ReactNode;
-  label?: string | ReactNode;
+interface TooltipProps {
+  label: string;
+  children: React.ReactNode;
 }
 
-const ToolTipDefault = ({ children, label }: Props) => {
+const Tooltip: React.FC<TooltipProps> = ({ label, children }) => {
+  if (!label) return <>{children}</>;
   return (
-    <>
-      {label ? (
-        <Tooltip
-          label={label}
-          classNames={{
-            tooltip:
-              "!bg-white !text-black !text-xs !border !border-gray-200 !shadow-lg",
-          }}
-          styles={{ arrow: { borderColor: "black" } }}
-        >
-          {children}
-        </Tooltip>
-      ) : (
-        <>{children}</>
-      )}
-    </>
+    <MantineTooltip
+      label={label}
+      position="top"
+      styles={{
+        tooltip: {
+          backgroundColor: "var(--bgColor)",
+          color: "var(--textColor)",
+          border: "1px solid var(--stroke)",
+          textTransform: "capitalize",
+        },
+        arrow: { border: "1px solid var(--stroke)" },
+      }}
+      withArrow
+    >
+      {children}
+    </MantineTooltip>
   );
 };
 
-export default ToolTipDefault;
+export default Tooltip;

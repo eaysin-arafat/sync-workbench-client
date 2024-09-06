@@ -2,8 +2,9 @@ import AuthLogo from "@/assets/AuthLogo";
 import GoogleIcon from "@/assets/GoogleIcon";
 import LogoDark from "@/assets/images/logo/logo-dark.svg";
 import Logo from "@/assets/images/logo/logo.svg";
-import Input from "@/component/ui/molecules/input";
-import PasswordInput from "@/component/ui/molecules/password-input";
+import Input from "@/component/ui/form-elements/input";
+import PasswordInput from "@/component/ui/form-elements/password-input";
+import Typography from "@/component/ui/typography";
 import { useLoginUserMutation } from "@/features/auth/auth-api";
 import { getSignupLink } from "@/routes/router-link";
 import React, { useEffect, useState } from "react";
@@ -73,9 +74,9 @@ const SignIn = () => {
           <div className="w-full flex items-center h-full border-stroke xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Start for free</span>
-              <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+              <Typography variant="h4" className="mb-9">
                 Sign In to Sync-Workbench
-              </h2>
+              </Typography>
 
               <form onSubmit={(e) => handleSignIn(e)} className="space-y-4">
                 <div className="space-y-4">
@@ -121,11 +122,11 @@ const SignIn = () => {
                   <input
                     type="submit"
                     value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2.5 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2.5 hover:bg-opacity-50">
+                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2 text-base hover:bg-opacity-50">
                   <span>
                     <GoogleIcon />
                   </span>

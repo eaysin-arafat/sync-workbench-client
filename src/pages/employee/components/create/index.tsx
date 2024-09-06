@@ -1,8 +1,11 @@
-import CheckBox from "@/component/ui/molecules/checkbox";
-import Input from "@/component/ui/molecules/input";
-import MultiSelect from "@/component/ui/molecules/multi-select";
-import Select from "@/component/ui/molecules/select";
+import CheckBox from "@/component/ui/form-elements/checkbox";
+import DateInput from "@/component/ui/form-elements/date-input";
+import Input from "@/component/ui/form-elements/input";
+import MultiSelect from "@/component/ui/form-elements/multi-select";
+import Select from "@/component/ui/form-elements/select";
+import Typography from "@/component/ui/typography";
 import { PostEmployeeRequest } from "@/constants/api-interface/employee";
+import { useReadDepartmentsQuery } from "@/features/department/department-api";
 import { useCreateEmployeeMutation } from "@/features/employee/employee-api";
 import { useFindUsersQuery } from "@/features/users/users-api";
 import { Button } from "@mantine/core";
@@ -18,8 +21,8 @@ export type EmployeeFormType = {
   is_internship?: boolean;
   attendances?: number[];
   documents?: number[];
-  manager_id?: string;
-  departments?: number[];
+  manager?: string;
+  employee_of_departments?: number[];
   projects?: number[];
   tasks?: number[];
   leaves?: number[];
@@ -36,8 +39,8 @@ const initialState: EmployeeFormType = {
   employment_status: "",
   employee_status: "",
   is_internship: false,
-  manager_id: "",
-  departments: [],
+  manager: "",
+  employee_of_departments: [],
   projects: [],
   tasks: [],
   attendances: [],
@@ -59,6 +62,11 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
     value: String(user?.id),
     label: user?.username,
   }));
+  const { data: departments } = useReadDepartmentsQuery({});
+  const departmentOptions = departments?.data?.map((department) => ({
+    label: department?.attributes?.department_name,
+    value: String(department?.id),
+  }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -68,6 +76,7 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectChange = (name: string) => (data: any) => {
     setFormState((prevState) => ({
       ...prevState,
@@ -86,8 +95,8 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
         Number(attendance)
       ),
       documents: formState?.documents?.map((document) => Number(document)),
-      manager_id: Number(formState?.manager_id),
-      departments: formState?.departments?.map((department) =>
+      manager_id: Number(formState?.manager),
+      departments: formState?.employee_of_departments?.map((department) =>
         Number(department)
       ),
       projects: formState?.projects?.map((project) => Number(project)),
@@ -105,9 +114,11 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
       <form action="" onSubmit={handleSubmit}>
-        <div className="space-y-5">
-          <>
-            <h1 className="mt-4 font-medium text-xl">Personal Information</h1>
+        <div className="space-y-3">
+          <div>
+            <Typography className="pb-3.5" variant="h3">
+              Personal Information
+            </Typography>
 
             <div className="grid md:grid-cols-2 items-center justify-normal md:justify-center gap-5">
               <Select
@@ -117,7 +128,7 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 options={userOptions || undefined}
               />
 
-              {/* <DateInput
+              <DateInput
                 label="Date of Hire"
                 name="date_of_hire"
                 type="date"
@@ -125,14 +136,15 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 onChange={(date) =>
                   setFormState((prev) => ({ ...prev, date_of_hire: date }))
                 }
-              /> */}
+              />
 
-              <Input
+              <MultiSelect
                 label="Department"
-                name="department_id"
+                name="employee_of_departments"
                 type="text"
-                value={formState.department_id || ""}
-                onChange={handleChange}
+                value={formState.employee_of_departments || undefined}
+                options={departmentOptions || []}
+                onChange={handleSelectChange("employee_of_departments")}
               />
 
               <Input
@@ -156,7 +168,12 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 name="employment_status"
                 value={formState.employment_status}
                 onChange={handleSelectChange("employment_status")}
-                options={["Internship", "Trading", "Provisional", "Permanent"]}
+                options={[
+                  { label: "Internship", value: "1" },
+                  { label: "Trading", value: "2" },
+                  { label: "Provisional", value: "3" },
+                  { label: "Permanent", value: "4" },
+                ]}
               />
 
               <Select
@@ -164,7 +181,10 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 name="employee_status"
                 value={formState.employee_status}
                 onChange={handleSelectChange("employee_status")}
-                options={["Active", "Inactive"]}
+                options={[
+                  { label: "Active", value: "1" },
+                  { label: "Inactive", value: "0" },
+                ]}
               />
 
               <CheckBox
@@ -174,18 +194,18 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 onChange={handleChange}
               />
             </div>
-          </>
+          </div>
 
-          <>
-            <h1 className="my-4 mt-8 font-medium text-xl">
+          <div>
+            <Typography className="pb-3.5" variant="h3">
               Work Relationships
-            </h1>
+            </Typography>
 
             <div className="grid grid-cols-2 gap-5">
               <Select
                 label="Manager"
                 name="manager_id"
-                value={formState.manager_id || ""}
+                value={formState.manager || ""}
                 options={userOptions}
                 onChange={handleSelectChange("manager_id")}
               />
@@ -193,64 +213,72 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
               <MultiSelect
                 label="Departments"
                 id="departments"
-                value={formState.departments || []}
+                options={formState.departments || []}
                 onChange={handleSelectChange("departments")}
               />
               <MultiSelect
                 label="Projects"
                 // name="projects"
-                value={formState.projects || []}
+                // value={formState.projects || []}
+                options={[]}
                 onChange={handleSelectChange("projects")}
               />
               <MultiSelect
                 label="Tasks"
                 // name="tasks"
-                value={formState.tasks || []}
+                // value={formState.tasks || []}
+                options={[]}
                 onChange={handleSelectChange("tasks")}
               />
             </div>
-          </>
+          </div>
 
-          <>
-            <h1 className="my-4 mt-8 font-medium text-xl">Employee Records</h1>
+          <div>
+            <Typography className="pb-3.5" variant="h3">
+              Employee Records
+            </Typography>
 
             <div className="grid grid-cols-2 gap-5">
               <MultiSelect
                 label="Attendances"
                 // name="attendances"
-                value={formState.attendances || []}
-                onChange={handleSelectChange("attendances")}
+                // value={formState.attendances || []}
                 options={[]}
+                onChange={handleSelectChange("attendances")}
               />
 
               <MultiSelect
                 label="Documents"
                 // name="documents"
-                value={formState.documents || []}
+                // value={formState.documents || []}
+                options={[]}
                 onChange={handleSelectChange("documents")}
               />
 
               <MultiSelect
                 label="Leaves"
                 // name="leaves"
-                value={formState.leaves || []}
+                // value={formState.leaves || []}
+                options={[]}
                 onChange={handleSelectChange("leaves")}
               />
               <MultiSelect
                 label="Performance Reviews"
                 // name="performance_reviews"
-                value={formState.performance_reviews || []}
+                // value={formState.performance_reviews || []}
+                options={[]}
                 onChange={handleSelectChange("performance_reviews")}
               />
 
               <MultiSelect
                 label="Payrolls"
                 // name="payrolls"
-                value={formState.payrolls || []}
+                // value={formState.payrolls || []}
+                options={[]}
                 onChange={handleSelectChange("payrolls")}
               />
             </div>
-          </>
+          </div>
 
           <div className="flex items-center gap-5 justify-end py-2">
             <Button type="submit">Submit</Button>

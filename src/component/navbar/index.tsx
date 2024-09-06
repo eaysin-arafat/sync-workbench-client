@@ -13,7 +13,7 @@ const Navbar = ({
   sidebarOpen: boolean;
 }) => {
   return (
-    <nav className="flex items-center justify-between px-3 flex-grow bg-bgColor z-50 py-3 border-b border-stroke relative">
+    <nav className="flex items-center justify-between px-5 flex-grow bg-bgColor z-10 py-3 border-b border-stroke relative">
       <div
         className={`flex justify-start items-center gap-7 transition-all duration-300 ease-in-out lg:w-[380px]`}
       >

@@ -21,9 +21,12 @@ module.exports = {
         whiten: "var(--whiten)",
         whiter: "var(--whiter)",
         textColor: "var(--textColor)",
+        overlayColor: "var(--overlayColor)",
+        toggleThemeBorder: "var(--toggleThemeBorder)",
         textGray: "var(--textGray)",
         black: "var(--black)",
         black2: "var(--black2)",
+        scrollbarColor: "var(--scrollbarColor)",
         body: "var(--body)",
         primary: "var(--primary)",
         secondary: "var(--secondary)",
@@ -205,9 +208,6 @@ module.exports = {
       },
       backgroundImage: {
         video: "url('../images/video/video.png')",
-      },
-      content: {
-        "icon-copy": 'url("../images/icon/icon-copy-alt.svg")',
       },
       transitionProperty: { width: "width", stroke: "stroke" },
       borderWidth: {

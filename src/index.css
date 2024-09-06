@@ -2,6 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "@mantine/core/styles.css";
+@import "@mantine/dates/styles.css";
 
 :root {
   --bgColor: #ffffff;
@@ -13,6 +14,8 @@
   --black2: #010101;
   --textColor: #1c2434;
   --textGray: #5f5e5b;
+  --overlayColor: rgba(0, 0, 0, 0.3);
+  --toggleThemeBorder: black;
 
   --body: #64748b;
   --primary: #2280de;
@@ -22,6 +25,7 @@
   --formBg: #ffffff;
   --placeholderColor: #9ca3af;
   --hoverColor: #f1f5f9;
+  --scrollbarColor: #d3d1cb;
 
   --gray: #eff4fb;
   --gray1: #f7f9fc;
@@ -36,7 +40,7 @@
   --meta7: #ff6766;
   --meta8: #f0950c;
   --meta9: #e5e7eb;
-  
+
   --apexchartsBorder: #eff4fb;
   --success: #219653;
   --danger: #d34053;
@@ -54,6 +58,9 @@
   --textColor: #d3d3d3;
   --textGray: #9b9b9b;
   --hoverColor: #27272a;
+  --scrollbarColor: #474747;
+  --overlayColor: rgba(0, 0, 0, 0.7);
+  --toggleThemeBorder: white;
 
   --apexchartsBorder: #313d4a;
 
@@ -74,7 +81,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray);
+  background: var(--scrollbarColor);
   border-radius: 0px;
 }
 
@@ -96,6 +103,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 @layer components {
+  .input {
+    @apply w-full rounded-sm border border-formBorder bg-bgColor py-2.5 pl-4 pr-4 text-sm text-textColor outline-none focus:border-primary focus-visible:shadow-none placeholder:text-placeholderColor;
+  }
+
   .input_required {
     @apply transform -translate-y-0.5 mx-1 text-danger text-base;
   }

@@ -1,6 +1,6 @@
 import AuthLogo from "@/assets/AuthLogo";
-import Input from "@/component/ui/molecules/input";
-import PasswordInput from "@/component/ui/molecules/password-input";
+import Input from "@/component/ui/form-elements/input";
+import PasswordInput from "@/component/ui/form-elements/password-input";
 import { useRegistrationUserMutation } from "@/features/auth/auth-api";
 import { Checkbox } from "@mantine/core";
 import { DateInput } from "@mantine/dates";

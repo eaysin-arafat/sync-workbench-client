@@ -1,5 +1,5 @@
 import React from "react";
-import Typography from "../../atoms/typography";
+import Typography from "../typography";
 
 /**
  * @description Page not found component
