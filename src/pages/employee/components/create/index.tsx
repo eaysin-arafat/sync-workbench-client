@@ -1,289 +1,244 @@
-import CheckBox from "@/component/ui/form-elements/checkbox";
-import DateInput from "@/component/ui/form-elements/date-input";
-import Input from "@/component/ui/form-elements/input";
-import MultiSelect from "@/component/ui/form-elements/multi-select";
-import Select from "@/component/ui/form-elements/select";
-import Typography from "@/component/ui/typography";
-import { PostEmployeeRequest } from "@/constants/api-interface/employee";
+import FormField from "@/component/form-field";
+import notification from "@/component/ui/alert-message";
 import { useReadDepartmentsQuery } from "@/features/department/department-api";
+import { useReadEmployeeStatusQuery } from "@/features/employee-status/employee-status-api";
 import { useCreateEmployeeMutation } from "@/features/employee/employee-api";
+import { useReadEmploymentStatusQuery } from "@/features/employment-status/employment-status";
 import { useFindUsersQuery } from "@/features/users/users-api";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@mantine/core";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
-export type EmployeeFormType = {
+// Define the form data type
+interface CreateEmployeeType {
   date_of_hire: Date | null;
-  department_id?: string;
-  position_id?: string;
-  salary?: number;
-  employment_status?: string;
-  employee_status?: string;
-  is_internship?: boolean;
-  attendances?: number[];
-  documents?: number[];
-  manager?: string;
-  employee_of_departments?: number[];
-  projects?: number[];
-  tasks?: number[];
-  leaves?: number[];
-  performance_reviews?: number[];
-  payrolls?: number[];
-  user_info?: string;
-};
+  position_id: string;
+  salary: string;
+  employment_status: string;
+  employee_status: string;
+  is_internship: boolean;
+  employee_skills: string;
+  user_info: string;
+  reporting_manager: string;
+  employee_of_departments: string[];
+}
 
-const initialState: EmployeeFormType = {
+// Define the validation schema
+const schema = yup.object().shape({
+  date_of_hire: yup
+    .date()
+    .nullable()
+    .typeError("Date of Hire must be a valid date")
+    .required("Date of Hire is required"),
+  position_id: yup.string().required("Position is required"),
+  salary: yup
+    .number()
+    .required("Salary is required")
+    .positive()
+    .typeError("Salary must be a positive number"),
+  employment_status: yup.string().required("Employment Status is required"),
+  employee_status: yup.string().required("Employee Status is required"),
+  is_internship: yup.boolean(),
+  employee_skills: yup.string().required("Employee Skills are required"),
+  reporting_manager: yup.string().nullable(),
+  employee_of_departments: yup.array().of(yup.string()).required(),
+});
+
+// Set initial form values
+const initialState: CreateEmployeeType = {
   date_of_hire: null,
-  department_id: "",
   position_id: "",
-  salary: 0,
+  salary: "",
   employment_status: "",
   employee_status: "",
   is_internship: false,
-  manager: "",
-  employee_of_departments: [],
-  projects: [],
-  tasks: [],
-  attendances: [],
-  documents: [],
-  leaves: [],
-  performance_reviews: [],
-  payrolls: [],
+  employee_skills: "",
   user_info: "",
+  reporting_manager: "",
+  employee_of_departments: [],
 };
 
 const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
-  const [formState, setFormState] = useState<EmployeeFormType>({
-    ...initialState,
+  // Set up the form
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<CreateEmployeeType>({
+    defaultValues: initialState,
+    resolver: yupResolver(schema as any),
+    mode: "onChange",
+    reValidateMode: "onSubmit",
   });
-  const [createEmployee] = useCreateEmployeeMutation();
-  const { data: users } = useFindUsersQuery(undefined);
 
+  // Hook for creating employee
+  const [createEmployee, { isError }] = useCreateEmployeeMutation();
+
+  // Fetch data for form fields
+  const { data: users } = useFindUsersQuery(undefined);
+  const { data: departments } = useReadDepartmentsQuery({});
+  const { data: employmentStatuses } = useReadEmploymentStatusQuery({});
+  const { data: employeeStatuses } = useReadEmployeeStatusQuery({});
+
+  // Convert data to options for select fields
   const userOptions = users?.map((user) => ({
     value: String(user?.id),
     label: user?.username,
   }));
-  const { data: departments } = useReadDepartmentsQuery({});
   const departmentOptions = departments?.data?.map((department) => ({
     label: department?.attributes?.department_name,
     value: String(department?.id),
   }));
+  const employmentStatusOptions = employmentStatuses?.data?.map(
+    (employmentStatus) => ({
+      label: employmentStatus?.attributes?.name,
+      value: String(employmentStatus?.id),
+    })
+  );
+  const employeeStatusOptions = employeeStatuses?.data?.map(
+    (employeeStatus) => ({
+      label: employeeStatus?.attributes?.name,
+      value: String(employeeStatus?.id),
+    })
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  // Form submission handler
+  const onSubmit = async (data: CreateEmployeeType) => {
+    try {
+      await createEmployee({ data }).unwrap();
+
+      notification({
+        title: "Success!",
+        type: "success",
+        message: "Employee has been created successfully",
+      });
+
+      reset(); // Reset form only on successful submission
+    } catch (errorRes: any) {
+      console.log("Submission error:", errorRes);
+      setValue("position_id", "position");
+
+      notification({
+        title: "Error!",
+        type: "error",
+        message: errorRes?.data?.error?.message || "Error creating employee!",
+      });
+    }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSelectChange = (name: string) => (data: any) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: data,
-    }));
-  };
+  console.log({ isError });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const payload: PostEmployeeRequest = {
-      ...formState,
-      department_id: Number(formState?.department_id),
-      position_id: Number(formState?.position_id),
-      user_info: Number(formState?.user_info),
-      attendances: formState?.attendances?.map((attendance) =>
-        Number(attendance)
-      ),
-      documents: formState?.documents?.map((document) => Number(document)),
-      manager_id: Number(formState?.manager),
-      departments: formState?.employee_of_departments?.map((department) =>
-        Number(department)
-      ),
-      projects: formState?.projects?.map((project) => Number(project)),
-      tasks: formState?.tasks?.map((task) => Number(task)),
-      leaves: formState?.leaves?.map((leave) => Number(leave)),
-      performance_reviews: formState?.performance_reviews?.map(
-        (performance_review) => Number(performance_review)
-      ),
-      payrolls: formState?.payrolls?.map((payroll) => Number(payroll)),
-    };
-
-    createEmployee({ data: payload });
-  };
+  useEffect(() => {
+    if (isError) {
+      setValue("position_id", "position");
+    }
+  }, [isError, setValue]);
 
   return (
     <>
-      <form action="" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-3">
           <div>
-            <Typography className="pb-3.5" variant="h3">
-              Personal Information
-            </Typography>
-
-            <div className="grid md:grid-cols-2 items-center justify-normal md:justify-center gap-5">
-              <Select
-                label="Identify User"
-                value={formState.user_info}
-                onChange={handleSelectChange("user_info")}
-                options={userOptions || undefined}
-              />
-
-              <DateInput
-                label="Date of Hire"
-                name="date_of_hire"
-                type="date"
-                value={formState.date_of_hire || undefined}
-                onChange={(date) =>
-                  setFormState((prev) => ({ ...prev, date_of_hire: date }))
-                }
-              />
-
-              <MultiSelect
-                label="Department"
-                name="employee_of_departments"
-                type="text"
-                value={formState.employee_of_departments || undefined}
-                options={departmentOptions || []}
-                onChange={handleSelectChange("employee_of_departments")}
-              />
-
-              <Input
-                label="Position"
-                name="position_id"
-                type="text"
-                value={formState.position_id || ""}
-                onChange={handleChange}
-              />
-
-              <Input
-                label="Salary"
-                name="salary"
-                type="number"
-                value={formState.salary}
-                onChange={handleChange}
-              />
-
-              <Select
-                label="Employment Status"
-                name="employment_status"
-                value={formState.employment_status}
-                onChange={handleSelectChange("employment_status")}
-                options={[
-                  { label: "Internship", value: "1" },
-                  { label: "Trading", value: "2" },
-                  { label: "Provisional", value: "3" },
-                  { label: "Permanent", value: "4" },
-                ]}
-              />
-
-              <Select
-                label="Employee Status"
-                name="employee_status"
-                value={formState.employee_status}
-                onChange={handleSelectChange("employee_status")}
-                options={[
-                  { label: "Active", value: "1" },
-                  { label: "Inactive", value: "0" },
-                ]}
-              />
-
-              <CheckBox
-                label="Is Internship"
-                name="is_internship"
-                value={formState.is_internship}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Typography className="pb-3.5" variant="h3">
-              Work Relationships
-            </Typography>
-
-            <div className="grid grid-cols-2 gap-5">
-              <Select
-                label="Manager"
-                name="manager_id"
-                value={formState.manager || ""}
+            <div className="grid md:grid-cols-2 items-start justify-center gap-3">
+              <FormField
+                formType="select"
+                name="user_info"
+                control={control}
+                label="User Info"
                 options={userOptions}
-                onChange={handleSelectChange("manager_id")}
+                error={errors.user_info?.message}
               />
 
-              <MultiSelect
+              <FormField
+                formType="date"
+                name="date_of_hire"
+                control={control}
+                label="Date of Hire"
+                error={errors.date_of_hire?.message}
+              />
+
+              <FormField
+                formType="multiSelect"
+                name="employee_of_departments"
                 label="Departments"
-                id="departments"
-                options={formState.departments || []}
-                onChange={handleSelectChange("departments")}
+                error={errors.employee_of_departments?.message}
+                control={control}
+                options={departmentOptions}
               />
-              <MultiSelect
-                label="Projects"
-                // name="projects"
-                // value={formState.projects || []}
-                options={[]}
-                onChange={handleSelectChange("projects")}
+
+              <FormField
+                formType="input"
+                name="position_id"
+                label="Position"
+                error={errors.position_id?.message}
+                control={control}
               />
-              <MultiSelect
-                label="Tasks"
-                // name="tasks"
-                // value={formState.tasks || []}
-                options={[]}
-                onChange={handleSelectChange("tasks")}
+
+              <FormField
+                formType="numberInput"
+                name="salary"
+                label="Salary"
+                error={errors.salary?.message}
+                control={control}
+              />
+
+              <FormField
+                formType="select"
+                name="employment_status"
+                control={control}
+                options={employmentStatusOptions}
+                label="Employment Status"
+                error={errors.employment_status?.message}
+              />
+
+              <FormField
+                formType="select"
+                name="employee_status"
+                control={control}
+                label="Employee Status"
+                options={employeeStatusOptions}
+                error={errors.employee_status?.message}
+              />
+
+              <div className="mt-4.5">
+                <FormField
+                  formType="checkbox"
+                  name="is_internship"
+                  control={control}
+                  label="Is Internship"
+                  error={errors.is_internship?.message}
+                />
+              </div>
+
+              <FormField
+                formType="input"
+                name="employee_skills"
+                label="Employee Skills"
+                error={errors.employee_skills?.message}
+                control={control}
+              />
+
+              <FormField
+                formType="select"
+                name="reporting_manager"
+                control={control}
+                label="Reporting Manager"
+                options={userOptions || []}
+                error={errors.reporting_manager?.message}
               />
             </div>
           </div>
 
-          <div>
-            <Typography className="pb-3.5" variant="h3">
-              Employee Records
-            </Typography>
-
-            <div className="grid grid-cols-2 gap-5">
-              <MultiSelect
-                label="Attendances"
-                // name="attendances"
-                // value={formState.attendances || []}
-                options={[]}
-                onChange={handleSelectChange("attendances")}
-              />
-
-              <MultiSelect
-                label="Documents"
-                // name="documents"
-                // value={formState.documents || []}
-                options={[]}
-                onChange={handleSelectChange("documents")}
-              />
-
-              <MultiSelect
-                label="Leaves"
-                // name="leaves"
-                // value={formState.leaves || []}
-                options={[]}
-                onChange={handleSelectChange("leaves")}
-              />
-              <MultiSelect
-                label="Performance Reviews"
-                // name="performance_reviews"
-                // value={formState.performance_reviews || []}
-                options={[]}
-                onChange={handleSelectChange("performance_reviews")}
-              />
-
-              <MultiSelect
-                label="Payrolls"
-                // name="payrolls"
-                // value={formState.payrolls || []}
-                options={[]}
-                onChange={handleSelectChange("payrolls")}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-5 justify-end py-2">
-            <Button type="submit">Submit</Button>
-            <Button variant="default" onClick={onClose}>
-              Close
+          <div className="flex justify-end space-x-4 py-3 pb-2">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={isSubmitting}>
+              Submit
             </Button>
           </div>
         </div>

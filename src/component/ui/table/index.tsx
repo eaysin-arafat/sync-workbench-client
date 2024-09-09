@@ -14,7 +14,7 @@ export interface TableColumn {
 interface TableProps {
   columns: TableColumn[];
   data: any[];
-  actions?: (item: any) => React.ReactNode;
+  actions?: (item: unknown) => React.ReactNode;
 }
 
 const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
@@ -22,13 +22,13 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
     <table className="w-full table-auto bg-bgColor">
       <thead>
         <tr className="bg-secondaryBg text-left">
-          <th className="py-3 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
+          <th className="py-2.5 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
             <Checkbox />
           </th>
           {columns.map((column, index) => (
             <th
               key={index}
-              className="py-3 px-4 font-semibold text-textColor cursor-pointer text-sm rounded-md"
+              className="py-2.5 px-4 font-semibold text-textColor cursor-pointer text-sm rounded-md"
               style={{
                 minWidth: column?.width ? `${column?.width}px` : "200px",
               }}
@@ -40,7 +40,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
             </th>
           ))}
           {actions && (
-            <th className="py-3 px-16 font-semibold text-textColor text-sm">
+            <th className="py-2.5 px-16 font-semibold text-textColor text-sm">
               Actions
             </th>
           )}
@@ -57,19 +57,19 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
             }`}
           >
             {actions && (
-              <td className="py-5 px-8">
+              <td className="px-8">
                 <Checkbox />
               </td>
             )}
 
             {columns.map((column, colIndex) => (
-              <td key={colIndex} className={`py-3 px-4`}>
+              <td key={colIndex} className={`py-2.5 px-4 text-sm`}>
                 {column?.render
                   ? column?.render(item)
                   : item?.[column?.accessor] || ""}
               </td>
             ))}
-            {actions && <td className="py-5 px-16">{actions(item)}</td>}
+            {actions && <td className="px-16">{actions(item)}</td>}
           </tr>
         ))}
       </tbody>

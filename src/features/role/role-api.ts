@@ -1,3 +1,5 @@
+import { Roles } from "@/constants/api-interface/role";
+import { QueryParams } from "@/utils/get-query-params";
 import { API } from "../API/API";
 
 const roleApi = API.injectEndpoints({
@@ -34,9 +36,9 @@ const roleApi = API.injectEndpoints({
      * @url /roles
      * @method GET
      */
-    findRoles: builder.query({
+    readRoles: builder.query<Roles, QueryParams>({
       query: () => ({
-        url: `/roles`,
+        url: `/users-permissions/roles`,
         method: "GET",
       }),
       providesTags: ["Role"],
@@ -47,7 +49,7 @@ const roleApi = API.injectEndpoints({
      * @url /roles/:id
      * @method GET
      */
-    findOneRole: builder.query({
+    readRoleById: builder.query({
       query: (id) => ({
         url: `/roles/${id}`,
         method: "GET",
@@ -74,8 +76,8 @@ const roleApi = API.injectEndpoints({
 export const {
   useCreateRoleMutation,
   useDeleteRoleMutation,
-  useFindRolesQuery,
-  useFindOneRoleQuery,
+  useReadRoleByIdQuery,
+  useReadRolesQuery,
   useUpdateRoleMutation,
 } = roleApi;
 

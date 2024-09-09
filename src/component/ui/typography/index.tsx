@@ -26,20 +26,27 @@ const Typography = ({
   as: Component = "p",
   ...rest
 }: TypographyProps) => {
-  const variantStyles: Record<string, Partial<TextProps>> = {
-    h1: { size: "xl", style: { fontWeight: 700 } },
-    h2: { size: "lg", style: { fontWeight: 700 } },
-    h3: { size: "md", style: { fontWeight: 700 } },
-    h4: { size: "sm", style: { fontWeight: 600 } },
-    h5: { size: "xs", style: { fontWeight: 600 } },
-    h6: { size: "xs", style: { fontWeight: 500 } },
-    p: { size: "md" },
-    span: { size: "sm" },
-    caption: { size: "xs", color: "gray" },
-    label: { size: "xs", style: { fontWeight: 600, color: "gray" } },
+  const variantStyles: Record<
+    string,
+    Partial<TextProps & { style?: React.CSSProperties }>
+  > = {
+    h1: { style: { fontWeight: 700, fontSize: "2rem" } },
+    h2: { style: { fontWeight: 700, fontSize: "1.75rem" } },
+    h3: { style: { fontWeight: 600, fontSize: "1.5rem" } },
+    h4: { style: { fontWeight: 500, fontSize: "1.25rem" } },
+    h5: { style: { fontWeight: 500, fontSize: "1rem" } },
+    h6: { style: { fontWeight: 500, fontSize: "0.875rem" } },
+    p: { style: { fontSize: "1rem" } },
+    span: { style: { fontSize: "0.875rem" } },
+    caption: { style: { fontSize: "0.75rem", color: "gray" } },
+    label: { style: { fontWeight: 600, fontSize: "0.75rem", color: "gray" } },
     link: {
-      size: "md",
-      style: { fontWeight: 500, color: "blue", textDecoration: "underline" },
+      style: {
+        fontWeight: 500,
+        fontSize: "1rem",
+        color: "blue",
+        textDecoration: "underline",
+      },
     },
   };
 

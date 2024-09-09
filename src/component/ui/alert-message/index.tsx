@@ -1,45 +1,35 @@
-import toast, { IconTheme } from "react-hot-toast";
+import { notifications } from "@mantine/notifications";
+import React from "react";
 
-interface ToastOptions {
-  type: "success" | "error" | "info";
-  message?: string;
-  duration?: number;
-  position?:
-    | "top-right"
-    | "top-center"
-    | "top-left"
-    | "bottom-right"
-    | "bottom-center"
-    | "bottom-left";
-  iconTheme?: IconTheme;
+// Define the props type for the ToastNotification component
+interface ToastNotificationProps {
+  title: string;
+  message: string;
+  type?: "success" | "error" | "info";
+  mt?: string | number;
 }
 
-const showToast = ({
-  type,
+const colorMap = {
+  error: "red",
+  success: "var(--primary)",
+  info: "blue",
+};
+
+const notification: React.FC<ToastNotificationProps> = ({
+  title,
   message,
-  duration = 4000,
-  position = "top-center",
-}: ToastOptions) => {
-  toast.dismiss();
+  type = "info",
+}) => {
+  const color = colorMap[type] || colorMap.success;
 
-  const defaultMessages = {
-    success: "Operation completed successfully",
-    error: "An error occurred. Please try again.",
-    info: "Here is some information for you",
-  };
-
-  const displayMessage = message || defaultMessages[type];
-
-  const toastMap = {
-    success: toast.success,
-    error: toast.error,
-    info: toast, // `info` typically just uses the default toast
-  };
-
-  toastMap[type](displayMessage, {
-    position,
-    duration,
+  return notifications.show({
+    title,
+    message,
+    color,
+    autoClose: 5000,
+    bottom: 20,
+    right: 20,
   });
 };
 
-export default showToast;
+export default notification;

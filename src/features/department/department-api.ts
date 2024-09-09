@@ -1,4 +1,4 @@
-import { DepartmentType } from "@/constants/api-interface/department";
+import { Department } from "@/constants/api-interface/department";
 import { RootResponse } from "@/constants/api-interface/root";
 import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
 import { API } from "../API/API";
@@ -24,7 +24,7 @@ const departmentApi = API.injectEndpoints({
      * @uri /departments
      * @method GET
      */
-    readDepartments: builder.query<RootResponse<DepartmentType>, QueryParams>({
+    readDepartments: builder.query<RootResponse<Department>, QueryParams>({
       query: (queryParams: QueryParams) => {
         return buildQueryURL(`/departments`, queryParams);
       },
@@ -47,7 +47,7 @@ const departmentApi = API.injectEndpoints({
      * @method PUT
      */
     updateDepartment: builder.mutation({
-      query: ({ id, body }: { id: string; body: DepartmentType }) => ({
+      query: ({ id, body }: { id: string; body: Department }) => ({
         url: `/departments/${id}`,
         method: "PUT",
         body,

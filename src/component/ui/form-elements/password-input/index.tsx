@@ -10,7 +10,7 @@ type PasswordInputProps = {
   disabled?: boolean;
   readOnly?: boolean;
   id?: string;
-  errMsg?: string;
+  error?: string;
   required?: boolean;
   className?: string;
   onClick?: () => void;
@@ -20,7 +20,7 @@ type PasswordInputProps = {
 const PasswordInput = ({
   placeholder = "",
   label,
-  errMsg,
+  error,
   required,
   disabled,
   name,
@@ -41,7 +41,7 @@ const PasswordInput = ({
       placeholder={placeholder ? placeholder : `Enter ${label}`}
       id={id}
       readOnly={readOnly}
-      error={errMsg}
+      error={error}
       withAsterisk={required}
       {...props}
     />

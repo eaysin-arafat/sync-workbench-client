@@ -1,13 +1,12 @@
 import CoverOne from "@/assets/images/cover/cover-01.png";
 import userSix from "@/assets/images/user/user-06.png";
+import Typography from "@/component/ui/typography";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
   return (
     <>
-      <h2 className="text-title-md font-semibold text-textColor mb-3">
-        Profile
-      </h2>
+      <Typography variant="h2">Profile</Typography>
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-bgColor shadow-default">
         <div className="relative z-20 h-35 md:h-65">
@@ -45,7 +44,9 @@ const Profile = () => {
                   />
                 </svg>
               </span>
-              <span>Edit</span>
+              <Typography variant="span" className="text-white">
+                Edit
+              </Typography>
             </label>
           </div>
         </div>
@@ -58,7 +59,7 @@ const Profile = () => {
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
               >
                 <svg
-                  className="fill-textColor"
+                  className="fill-white"
                   width="14"
                   height="14"
                   viewBox="0 0 14 14"

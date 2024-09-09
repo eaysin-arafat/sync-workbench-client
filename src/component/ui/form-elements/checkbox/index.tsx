@@ -1,69 +1,58 @@
+import { BaseInputType } from "@/constants/form-interface/form-input";
 import { Checkbox as MantineCheckbox } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
-interface CheckBoxProps {
+interface Props {
   value?: boolean; // The boolean checked state of the checkbox
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name?: string;
-  label?: string;
-  errMsg?: string;
-  disabled?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;
   readOnly?: boolean;
-  onClick?: () => void;
-  id?: string;
 }
 
-const Checkbox = ({
-  disabled,
-  errMsg,
-  id,
-  label,
-  name,
-  onChange,
-  onClick,
-  readOnly,
-  value,
-}: CheckBoxProps) => {
-  const [isChecked, setIsChecked] = useState<boolean>(value || false);
+export type CheckboxProps = BaseInputType & Props;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    if (onChange) onChange(e);
-  };
+const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  (Props: CheckboxProps, ref) => {
+    const {
+      disabled,
+      error,
+      id,
+      label,
+      name,
+      onChange,
+      onClick,
+      readOnly,
+      value,
+    } = Props;
 
-  return (
-    <MantineCheckbox
-      styles={{
-        input: {
-          height: "17px",
-          width: "17px",
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "center",
-        },
-        icon: {
-          height: "9px",
-          width: "9px",
-          marginTop: "4px",
-        },
-        inner: {
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "center",
-        },
-      }}
-      checked={isChecked}
-      onChange={handleChange}
-      onClick={onClick}
-      readOnly={readOnly}
-      name={name}
-      label={label}
-      id={id}
-      error={errMsg}
-      disabled={disabled}
-    />
-  );
-};
+    const [isChecked, setIsChecked] = useState<boolean>(value || false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newCheckedState = !isChecked;
+      setIsChecked(newCheckedState);
+      if (onChange) onChange(e);
+    };
+
+    return (
+      <MantineCheckbox
+        ref={ref}
+        styles={{
+          root: { marginTop: "8px" },
+          label: { fontWeight: 400, fontSize: "15px" },
+        }}
+        size="xs"
+        checked={isChecked}
+        onChange={handleChange}
+        onClick={onClick}
+        readOnly={readOnly}
+        name={name}
+        label={label}
+        id={id}
+        error={error}
+        disabled={disabled}
+      />
+    );
+  }
+);
 
 export default Checkbox;

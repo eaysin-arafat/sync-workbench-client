@@ -19,8 +19,9 @@ export const useModal = (initialOpened: boolean = false): UseModalReturn => {
       onClose={close}
       {...props}
       styles={{
-        content: { paddingLeft: 10, paddingRight: 10 },
-        title: { fontSize: 22 },
+        title: { fontSize: 22, fontWeight: 600 },
+        header: { paddingTop: "20px" },
+        content: { padding: "0 10px" },
       }}
     />
   );

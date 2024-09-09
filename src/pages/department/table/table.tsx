@@ -1,9 +1,9 @@
 import Avatar, { AvatarDataType } from "@/component/ui/avatar";
 import Table, { TableColumn } from "@/component/ui/table";
+import TableActionBtn from "@/component/ui/table/table-action-btn";
 import { DepartmentType } from "@/constants/api-interface/department";
 import { EntityAttributes } from "@/constants/api-interface/root";
 import AvatarGroup from "./avatar-group";
-import TableActionBtn from "./table-action-button";
 
 const columns: TableColumn[] = [
   {

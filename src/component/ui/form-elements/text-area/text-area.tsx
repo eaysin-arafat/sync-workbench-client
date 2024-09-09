@@ -1,18 +1,13 @@
-import InputError from "../../atoms/input-error";
-import InputLabel from "../../atoms/input-label";
+import { BaseInputType } from "@/constants/form-interface/form-input";
+import { Textarea as MantineTextarea } from "@mantine/core";
 
-type TextareaProps = {
+type Props = {
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void | undefined;
-  name?: string;
-  label?: string;
-  required?: boolean;
-  errMsg?: string;
-  disabled?: boolean;
-  placeholder?: string;
-  id?: string;
   rows?: number;
 };
+
+type TextareaProps = BaseInputType & Props;
 
 // Textarea input component
 function Textarea({
@@ -21,29 +16,26 @@ function Textarea({
   name,
   label,
   required,
-  errMsg,
+  error,
   disabled,
   placeholder,
   id,
-  rows = 6,
+  rows,
 }: TextareaProps) {
   return (
-    <div>
-      {label && <InputLabel label={label} required={required} />}
-
-      <textarea
-        value={value}
-        name={name}
-        onChange={onChange}
-        id={id}
-        rows={rows}
-        disabled={disabled}
-        placeholder={placeholder ? placeholder : `Enter ${placeholder}`}
-        className="w-full rounded-lg border-[1.5px] border-formBorder bg-formBg py-3 px-5 text-textColor outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-      />
-
-      {errMsg && <InputError errMsg={errMsg} />}
-    </div>
+    <MantineTextarea
+      value={value}
+      name={name}
+      label={label}
+      onChange={onChange}
+      withAsterisk={required}
+      styles={{ label: { fontWeight: 400 } }}
+      id={id}
+      rows={rows}
+      disabled={disabled}
+      placeholder={placeholder ? placeholder : `Enter ${placeholder}`}
+      error={error}
+    />
   );
 }
 

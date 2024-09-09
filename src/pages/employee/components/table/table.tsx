@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Table from "@/component/ui/table";
+import TableActionBtn from "@/component/ui/table/table-action-btn";
 import { EmployeeType } from "@/constants/api-interface/employee";
 import { EntityAttributes } from "@/constants/api-interface/root";
-import TableActionBtn from "./table-action-button";
+import { capitalize } from "@/utils/capitalize";
 
 const columns = [
   {
@@ -17,7 +19,8 @@ const columns = [
       return (
         <>
           <h5 className="font-medium text-black">
-            {item.name?.first_name} {item.name?.last_name}
+            {capitalize(item.name?.first_name)}{" "}
+            {capitalize(item.name?.last_name)}
           </h5>
         </>
       );
@@ -51,18 +54,20 @@ const columns = [
     header: "Employee Status",
     accessor: "employee_status",
     render: (item: any) => {
-      return (
+      return item?.employee_status ? (
         <p
           className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
             item.employee_status === "Active"
-              ? "bg-success text-success"
+              ? "bg-success text-white"
               : item.employee_status === "Inactive"
-              ? "bg-danger text-danger"
-              : "bg-warning text-warning"
+              ? "bg-danger text-white"
+              : "bg-warning text-white"
           }`}
         >
           {item.employee_status}
         </p>
+      ) : (
+        ""
       );
     },
   },
@@ -106,27 +111,26 @@ const EmployeeTable = ({
       email: userInfo?.email,
       date_of_hire: employeeInfo?.date_of_hire,
       salary: employeeInfo?.salary,
-      role: "",
-      employment_status: employeeInfo?.employment_status,
-      employee_status: employeeInfo?.employment_status,
+      role: userInfo?.role?.data?.attributes?.name,
+      employment_status:
+        employeeInfo?.employment_status?.data?.attributes?.name,
+      employee_status: employeeInfo?.employee_status?.data?.attributes?.name,
       is_internship: employeeInfo?.is_internship,
-      position_title: employeeInfo?.position_id,
-      department: "",
-      manager: "",
+      position_title: userInfo?.designation?.data?.attributes?.name,
+      department: employeeInfo?.department?.data?.attributes?.department_name,
+      manager:
+        employeeInfo?.reporting_manager?.data?.attributes?.user_info?.data
+          ?.attributes?.username,
     };
   });
 
-  console.log(employees);
-
   return (
-    <div className="rounded-sm bg-bgColor pt-6 shadow-1">
-      <div className="max-w-full overflow-x-auto">
-        <Table
-          columns={columns}
-          data={tableData}
-          actions={(item) => <TableActionBtn data={item} />}
-        />
-      </div>
+    <div className="max-w-full overflow-x-auto rounded-sm bg-bgColor pt-6 shadow-1">
+      <Table
+        columns={columns}
+        data={tableData}
+        actions={() => <TableActionBtn viewAction />}
+      />
     </div>
   );
 };

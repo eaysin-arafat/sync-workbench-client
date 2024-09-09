@@ -10,7 +10,7 @@ export interface BaseInputType {
   icon?: React.ReactNode;
   readOnly?: boolean;
   id?: string;
-  errMsg?: string;
+  error?: string;
   required?: boolean;
   onClick?: () => void;
 }

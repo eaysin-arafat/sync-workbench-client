@@ -1,3 +1,5 @@
+import { Designation } from "./designations";
+import { Role } from "./role";
 import { SingleEntityAttributes } from "./root";
 
 export interface User {
@@ -11,21 +13,26 @@ export interface User {
   updatedAt: string;
   first_name: string;
   last_name: string;
+  position_name: string;
   address: string;
-  date_of_birth?: any;
-  city: string;
   state: string;
+  city: string;
   country: string;
+  date_of_birth: string;
+  phone: number;
   zip_code: number;
-  phone_number: number;
-  position_title: string;
+  employee_skill: any;
+  employee_certification: any;
+  work_experiences: any[];
+  designation: SingleEntityAttributes<Designation>;
   avatar: SingleEntityAttributes<AvatarType>;
+  role: SingleEntityAttributes<Role>;
 }
 
 export interface AvatarType {
   name: string;
-  alternativeText: any;
-  caption: any;
+  alternativeText: string;
+  caption: string;
   width: number;
   height: number;
   formats: Formats;
@@ -34,9 +41,9 @@ export interface AvatarType {
   mime: string;
   size: number;
   url: string;
-  previewUrl: any;
+  previewUrl: string;
   provider: string;
-  provider_metadata: any;
+  provider_metadata: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -50,7 +57,7 @@ export interface Thumbnail {
   hash: string;
   ext: string;
   mime: string;
-  path: any;
+  path: string;
   width: number;
   height: number;
   size: number;

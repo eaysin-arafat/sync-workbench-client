@@ -1,37 +1,12 @@
-import useWindowWidth from "@/hooks/shared/useWindowWidth";
-import { useEffect, useState } from "react";
 import { IoIosLink } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import useLocation
 import { sidebarMenu } from "./sidebar-data";
+import useSidebar from "./useSidebar";
 
-const Sidebar = ({
-  sidebarOpen,
-  setSidebarOpen,
-}: {
-  sidebarOpen: boolean;
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const W1024 = useWindowWidth(1024);
-
-  const toggleMenu = (id: string, link?: string) => {
-    if (link) {
-      navigate(link);
-      if (W1024) setSidebarOpen(!sidebarOpen);
-    } else {
-      setOpenMenuId(openMenuId === id ? null : id);
-    }
-  };
-
-  useEffect(() => {
-    if (W1024) {
-      setSidebarOpen(false);
-    } else {
-      setSidebarOpen(true);
-    }
-  }, [W1024, setSidebarOpen]);
+const Sidebar = () => {
+  const { toggleMenu, sidebarOpen, W1024, openMenuId, handleSetSidebar } =
+    useSidebar();
 
   return (
     <div className="h-screen">
@@ -40,12 +15,17 @@ const Sidebar = ({
           sidebarOpen ? "ms-[0px]" : "ms-[-280px]"
         }`}
       >
-        <nav aria-label="Main" className="space-y-1">
+        <nav aria-label="Main" className="">
           {sidebarMenu?.map((item) => (
             <div key={item?.id}>
               <div
                 onClick={() => toggleMenu(item?.id, item?.link)}
-                className={`flex items-center p-2 transition-colors hover:bg-gray space-x-3 px-5 pl-6.5 py-2.5 cursor-pointer text-textColor`}
+                className={`flex items-center p-2 transition-colors hover:bg-gray space-x-3 px-5 pl-6.5 py-2.5 cursor-pointer text-textColor ${
+                  (location.pathname === item.link || openMenuId === item.id) &&
+                  !item?.submenu
+                    ? "bg-gray"
+                    : ""
+                }`}
               >
                 <span aria-hidden="true">
                   {item?.icon ? item?.icon : <IoIosLink />}
@@ -59,14 +39,16 @@ const Sidebar = ({
                 )}
               </div>
               {item?.submenu && openMenuId === item?.id && (
-                <div className={`mt-2 space-y-2 pl-10`}>
+                <div className={`pl-10`}>
                   {item?.submenu?.map((subItem) => (
                     <Link
-                      className={`flex items-center p-2 transition-colors rounded-sm hover:bg-gray cursor-pointer text-textColor`}
+                      className={`flex items-center p-2 py-2.5 pl-4 transition-colors rounded-sm hover:bg-gray cursor-pointer text-textColor ${
+                        location.pathname === subItem.link ? "bg-gray" : ""
+                      }`}
                       key={subItem?.id}
                       to={subItem?.link}
                       onClick={() => {
-                        if (W1024) setSidebarOpen(!sidebarOpen);
+                        if (W1024) handleSetSidebar(!sidebarOpen);
                       }}
                     >
                       <span aria-hidden="true">

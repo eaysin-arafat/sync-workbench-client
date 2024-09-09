@@ -1,6 +1,6 @@
 import {
+  EmployeePostDataType,
   EmployeeType,
-  PostEmployeeRequest,
 } from "@/constants/api-interface/employee";
 import { RootResponse } from "@/constants/api-interface/root";
 import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
@@ -14,7 +14,7 @@ const employeeApi = API.injectEndpoints({
      * @method POST
      */
     createEmployee: builder.mutation({
-      query: (body: { data: PostEmployeeRequest }) => ({
+      query: (body: { data: EmployeePostDataType }) => ({
         url: `/employees`,
         method: "POST",
         body,

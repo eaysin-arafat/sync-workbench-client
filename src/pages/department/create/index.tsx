@@ -1,6 +1,4 @@
-import { ControlledInput } from "@/component/ui/form-elements/input";
-import { ControlledMultiSelect } from "@/component/ui/form-elements/multi-select";
-import { ControlledSelect } from "@/component/ui/form-elements/select";
+import FormField from "@/component/form-field";
 import { Button } from "@mantine/core";
 import useCreate from "./useCreate";
 
@@ -17,55 +15,61 @@ const CreateDepartment = ({ onClose }: { onClose: () => void }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid md:grid-cols-2 gap-4">
-        <ControlledInput
+        <FormField
+          formType="input"
           control={control}
           name="department_name"
           label="Department Name"
           placeholder="Enter Department Name"
-          errMsg={errors.department_name?.message}
+          error={errors.department_name?.message}
           required
         />
 
-        <ControlledInput
+        <FormField
+          formType="input"
           name="description"
           control={control}
           label="Description"
-          errMsg={errors.description?.message}
+          error={errors.description?.message}
         />
 
-        <ControlledInput
+        <FormField
+          formType="input"
           name="location"
           control={control}
           label="Location"
-          errMsg={errors.location?.message}
+          error={errors.location?.message}
         />
 
-        <ControlledSelect
+        <FormField
+          formType="select"
           name="manager"
           control={control}
           label="Add Manager"
           options={employeesOptions || []}
-          errMsg={errors.manager?.message}
+          error={errors.manager?.message}
           required
         />
 
         <div className="col-span-full">
-          <ControlledMultiSelect
+          <FormField
+            formType="multiSelect"
             name="projects"
             control={control}
             label="Add Project"
             options={[{ label: "data", value: "1" }]}
-            errMsg={errors.projects?.message}
+            error={errors.projects?.message}
           />
         </div>
 
         <div className="col-span-full">
-          <ControlledMultiSelect
+          <FormField
+            formType="multiSelect"
             name="employees"
             control={control}
             placeholder="Search New Employee"
             options={employeesOptions || []}
-            errMsg={errors.employees?.message}
+            error={errors.employees?.message}
             label="Add New Employee"
           />
         </div>

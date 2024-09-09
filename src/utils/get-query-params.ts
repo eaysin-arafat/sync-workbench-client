@@ -25,6 +25,9 @@ export interface Populate {
 interface Pagination {
   pageSize?: number;
   page?: number;
+  start?: number;
+  limit?: number;
+  withCount?: boolean;
 }
 
 export interface QueryParams {
@@ -43,22 +46,30 @@ export interface QueryParams {
  * @param {QueryParams} queryParams - The query parameters object.
  * @returns {string} - The full query string URL.
  */
-
 export const buildQueryURL = (
   endpoint: string,
   queryParams: QueryParams
 ): string => {
+  // Handle pagination validation logic
+  const pagination = queryParams.pagination || {};
+
+  // Ensure no mixing of page-based and offset-based pagination
+  if (
+    (pagination.page !== undefined || pagination.pageSize !== undefined) &&
+    (pagination.start !== undefined || pagination.limit !== undefined)
+  ) {
+    throw new Error(
+      "You cannot use both page-based and offset-based pagination at the same time."
+    );
+  }
+
+  // Convert the query parameters to a query string using qs
   const queryString = qs.stringify(queryParams, {
-    indices: true,
-    addQueryPrefix: true,
-    arrayFormat: "brackets",
+    indices: false, // Do not use array indices in keys (e.g., `filters[0]`)
+    addQueryPrefix: true, // Add '?' at the start of the query string
+    arrayFormat: "brackets", // Ensure array parameters use brackets format
   });
 
+  // Return the full URL (endpoint + query string)
   return `${endpoint}${queryString}`;
 };
-
-// http://localhost:1337/api/employees?sort=date_of_hire%3Aasc&populate%5Buser_info%5D%5Bpopulate%5D%5Bavatar%5D=%7B%7D&populate%5Buser_info%5D%5Bfields%5D%5B%5D=username
-
-// http://localhost:1337/api/employees?sort=date_of_hire%3Aasc&populate%5Buser_info%5D%5Bpopulate%5D%5Bavatar%5D=%7B%7D
-
-// http://localhost:1337/api/employees?sort%5B%5D=date_of_hire%3Aasc&populate%5Buser_info%5D%5Bfields%5D%5B%5D=username
