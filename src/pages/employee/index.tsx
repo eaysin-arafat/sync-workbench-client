@@ -1,18 +1,19 @@
 import Button from "@/component/ui/button";
 import Input from "@/component/ui/form-elements/input";
 import Select from "@/component/ui/form-elements/select";
+import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import usePagination from "@/component/ui/pagination/usePagination";
 import { useReadEmployeesQuery } from "@/features/employee/employee-api";
-import { useModal } from "@/hooks/modal/useModal";
 import { QueryParams } from "@/utils/get-query-params";
+import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import CreateEmployee from "./components/create";
 import EmployeeTable from "./components/table/table";
 
 const Employee = () => {
-  const { openModal, closeModal, ModalComponent } = useModal();
+  const [opened, { open, close }] = useDisclosure(false);
   // State for search query and sorting
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOption, setSortOption] = useState<string>("date_of_hire:asc");
@@ -20,7 +21,7 @@ const Employee = () => {
   const {
     pagination: { currentPage, itemsPerPage },
     handlePageChange,
-  } = usePagination(1, 10);
+  } = usePagination(10);
 
   const options = [
     { label: "Frontend Developer", value: "1" },
@@ -82,7 +83,7 @@ const Employee = () => {
         pageTitle="Employee"
         hasAddButton
         btnLabel="Add New Employee"
-        onClick={openModal}
+        onClick={open}
       />
 
       {/* Filters for Employee Id, Name, and Position */}
@@ -110,9 +111,14 @@ const Employee = () => {
       />
 
       {/* Modal for adding a new employee */}
-      <ModalComponent title="Add New Employee" size={"70rem"}>
-        <CreateEmployee onClose={closeModal} />
-      </ModalComponent>
+      <Modal
+        onClose={close}
+        opened={opened}
+        title="Add New Employee"
+        size={"70rem"}
+      >
+        <CreateEmployee onClose={close} />
+      </Modal>
     </div>
   );
 };

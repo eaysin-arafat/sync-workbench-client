@@ -7,7 +7,6 @@ import { useReadEmploymentStatusQuery } from "@/features/employment-status/emplo
 import { useFindUsersQuery } from "@/features/users/users-api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@mantine/core";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -66,17 +65,16 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
     control,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CreateEmployeeType>({
     defaultValues: initialState,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: yupResolver(schema as any),
     mode: "onChange",
-    reValidateMode: "onSubmit",
   });
 
   // Hook for creating employee
-  const [createEmployee, { isError }] = useCreateEmployeeMutation();
+  const [createEmployee] = useCreateEmployeeMutation();
 
   // Fetch data for form fields
   const { data: users } = useFindUsersQuery(undefined);
@@ -117,11 +115,10 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
         message: "Employee has been created successfully",
       });
 
-      reset(); // Reset form only on successful submission
+      reset();
+      onClose();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (errorRes: any) {
-      console.log("Submission error:", errorRes);
-      setValue("position_id", "position");
-
       notification({
         title: "Error!",
         type: "error",
@@ -129,14 +126,6 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
       });
     }
   };
-
-  console.log({ isError });
-
-  useEffect(() => {
-    if (isError) {
-      setValue("position_id", "position");
-    }
-  }, [isError, setValue]);
 
   return (
     <>

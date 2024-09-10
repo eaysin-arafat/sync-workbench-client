@@ -8,8 +8,9 @@ interface Option {
 }
 
 interface Props {
-  value?: string[] | null;
-  onChange?: (value: string[], selectedOptions: Option[]) => void;
+  value?: string[];
+  onChange?: (value: string[]) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   options?: Option[];
   defaultValue?: string[] | null;
 }
@@ -17,7 +18,7 @@ interface Props {
 export type MultiSelectProps = BaseInputType & Props;
 
 const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
-  (Props, ref) => {
+  (props, ref) => {
     const {
       disabled,
       error,
@@ -26,11 +27,12 @@ const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
       onChange,
       placeholder,
       required,
+      onBlur,
       value,
       options = [],
       defaultValue,
       id,
-    } = Props;
+    } = props;
 
     // Ensure options are in the correct format
     const formattedOptions = options.map((option) => ({
@@ -43,12 +45,10 @@ const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
     const defaultValueArray = Array.isArray(defaultValue) ? defaultValue : [];
 
     // Handle changes
+    // Handle changes
     const handleChange = (val: string[]) => {
-      const selectedOptions = formattedOptions.filter((option) =>
-        val.includes(option.value)
-      );
       if (onChange) {
-        onChange(val, selectedOptions);
+        onChange(val); // Pass only the value array
       }
     };
 
@@ -56,7 +56,9 @@ const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
       <MantineMultiSelect
         ref={ref}
         label={label}
-        placeholder={placeholder ? placeholder : `Select ${label}`}
+        placeholder={
+          placeholder ? placeholder : `Select ${label?.toLowerCase()}`
+        }
         data={formattedOptions}
         value={valueArray}
         onChange={handleChange}
@@ -65,10 +67,11 @@ const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
         name={name}
         id={id}
         error={error}
+        onBlur={onBlur}
         disabled={disabled}
         searchable
         styles={{
-          label: { fontWeight: 400 },
+          label: { fontWeight: 500 },
           pill: {
             borderRadius: "0px",
             backgroundColor: "transparent",

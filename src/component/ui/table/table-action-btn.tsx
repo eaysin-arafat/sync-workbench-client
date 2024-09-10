@@ -5,26 +5,40 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface TableActionBtnProps {
   viewAction?: boolean; // Optional dynamic view button
-  onEdit?: () => void; // Default edit action
-  onDelete?: () => void; // Default delete action
-  onView?: () => void;
+  handleEdit?: (id: string) => void; // Default edit action
+  handleDelete?: (id: string) => void; // Default delete action
+  handleView?: (id: string) => void;
   spacing?: string; // Optional custom spacing between buttons
   buttonClass?: string; // Optional custom button class
+  id?: string;
 }
 
 const TableActionBtn = ({
   viewAction,
-  onEdit,
-  onDelete,
+  handleEdit,
+  handleDelete,
   spacing = "space-x-3.5",
   buttonClass = "hover:text-primary",
-  onView,
+  handleView,
+  id = "",
 }: TableActionBtnProps) => {
+  const handleViewAction = (id: string) => {
+    if (handleView) handleView(id);
+  };
+
+  const handleEditAction = (id: string) => {
+    if (handleEdit) handleEdit(id);
+  };
+
+  const handleDeleteAction = (id: string) => {
+    if (handleDelete) handleDelete(id);
+  };
+
   return (
     <div className={`flex items-center ${spacing}`}>
       {viewAction && (
         <ToolTip label={"View"}>
-          <button className={buttonClass} onClick={onView}>
+          <button className={buttonClass} onClick={() => handleViewAction(id)}>
             <IoEyeOutline />
           </button>
         </ToolTip>
@@ -32,14 +46,14 @@ const TableActionBtn = ({
 
       {/* Default Edit Button */}
       <ToolTip label="Edit">
-        <button className={buttonClass} onClick={onEdit}>
+        <button className={buttonClass} onClick={() => handleEditAction(id)}>
           <MdModeEditOutline />
         </button>
       </ToolTip>
 
       {/* Default Delete Button */}
       <ToolTip label="Delete">
-        <button className={buttonClass} onClick={onDelete}>
+        <button className={buttonClass} onClick={() => handleDeleteAction(id)}>
           <RiDeleteBin6Line />
         </button>
       </ToolTip>

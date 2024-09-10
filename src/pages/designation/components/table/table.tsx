@@ -1,8 +1,8 @@
 import Table from "@/component/ui/table";
+import ShowTableList from "@/component/ui/table-list-item";
 import TableActionBtn from "@/component/ui/table/table-action-btn";
 import { Designation } from "@/constants/api-interface/designations";
 import { EntityAttributes } from "@/constants/api-interface/root";
-import { User } from "@/constants/api-interface/user";
 
 const columns = [
   {
@@ -20,37 +20,52 @@ const columns = [
     accessor: "description",
   },
   {
-    header: "Users",
-    accessor: "users",
+    header: "Employees",
+    accessor: "employees",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     render: (item: any) => {
-      return <p>{item?.users?.map((user: User) => user?.username)}</p>;
+      const data = item?.employees?.map(
+        (employee: { username: string }) => employee?.username
+      );
+      return <ShowTableList data={data} />;
     },
   },
 ];
 
 const DesignationTable = ({
   designations,
+  handleEdit,
+  handleDelete,
 }: {
   designations: EntityAttributes<Designation>[];
+  handleEdit?: (id: string) => void;
+  handleDelete?: (id: string) => void;
 }) => {
   const tableData = designations?.map((designation) => {
     return {
       id: designation?.id,
       name: designation?.attributes?.name,
       description: designation?.attributes?.description,
-      users: designation?.attributes?.users?.data,
+      employees: designation?.attributes?.employees?.data?.map((employee) => ({
+        username: employee?.attributes?.user_info?.data?.attributes?.username,
+      })),
     };
   });
 
   return (
-    <div className="rounded-sm bg-bgColor pt-6 shadow-1">
-      <div className="max-w-full overflow-x-auto">
-        <Table
-          columns={columns}
-          data={tableData}
-          actions={(item) => <TableActionBtn data={item} viewAction />}
-        />
-      </div>
+    <div className="rounded-sm bg-bgColor pt-6 shadow-1 max-w-full overflow-x-auto">
+      <Table
+        columns={columns}
+        data={tableData}
+        actions={(id) => (
+          <TableActionBtn
+            id={id as string}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            viewAction
+          />
+        )}
+      />
     </div>
   );
 };

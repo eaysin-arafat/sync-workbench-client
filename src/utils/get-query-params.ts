@@ -48,7 +48,8 @@ export interface QueryParams {
  */
 export const buildQueryURL = (
   endpoint: string,
-  queryParams: QueryParams
+  queryParams: QueryParams = {},
+  id?: string | number
 ): string => {
   // Handle pagination validation logic
   const pagination = queryParams.pagination || {};
@@ -63,6 +64,8 @@ export const buildQueryURL = (
     );
   }
 
+  const endpointWithId = id ? `${endpoint}/${id}` : endpoint;
+
   // Convert the query parameters to a query string using qs
   const queryString = qs.stringify(queryParams, {
     indices: false, // Do not use array indices in keys (e.g., `filters[0]`)
@@ -71,5 +74,5 @@ export const buildQueryURL = (
   });
 
   // Return the full URL (endpoint + query string)
-  return `${endpoint}${queryString}`;
+  return `${endpointWithId}${queryString}`;
 };

@@ -1,15 +1,16 @@
 import Button from "@/component/ui/button";
 import Input from "@/component/ui/form-elements/input";
 import Select from "@/component/ui/form-elements/select";
+import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import { useReadRolesQuery } from "@/features/role/role-api";
-import { useModal } from "@/hooks/modal/useModal";
+import { useDisclosure } from "@mantine/hooks";
 import CreateRulePermission from "./components/create";
 import RulePermissionTable from "./components/table/table";
 
 const RolePermission = () => {
-  const { openModal, closeModal, ModalComponent } = useModal();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const { data: rules } = useReadRolesQuery({});
 
@@ -19,7 +20,7 @@ const RolePermission = () => {
         pageTitle="Role & Permission"
         hasAddButton
         btnLabel="Add New Role"
-        onClick={openModal}
+        onClick={open}
       />
 
       <div className="grid md:grid-cols-3 items-center gap-2">
@@ -35,9 +36,14 @@ const RolePermission = () => {
       <RulePermissionTable roles={rules?.roles || []} />
       <CustomPagination />
 
-      <ModalComponent title="Authentication" size={"70rem"}>
-        <CreateRulePermission onClose={closeModal} />
-      </ModalComponent>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Authentication"
+        size={"70rem"}
+      >
+        <CreateRulePermission onClose={close} />
+      </Modal>
     </div>
   );
 };

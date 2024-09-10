@@ -116,7 +116,6 @@ const ProjectTable = ({
     };
   });
 
-  console.log(employees);
 
   return (
     <div className="rounded-sm bg-bgColor pt-6 shadow-1">

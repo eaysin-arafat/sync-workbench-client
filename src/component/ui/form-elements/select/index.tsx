@@ -11,6 +11,7 @@ interface Props {
   value?: string;
   onChange?: (value: string | null, option: Option | undefined) => void;
   options?: Option[];
+  variant?: "default" | "filled" | "unstyled";
 }
 
 export type SelectProps = BaseInputType & Props;
@@ -30,6 +31,8 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
       options = [],
       defaultValue,
       id,
+      variant = "default",
+      readOnly,
     }: SelectProps,
     ref
   ) => {
@@ -45,15 +48,19 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
       <MantineSelect
         ref={ref} // Forward the ref to the MantineSelect
         label={label}
-        placeholder={placeholder ? placeholder : `Enter ${label}`}
+        placeholder={
+          placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
+        }
+        variant={variant}
         data={options.map((option) => ({
           label: option.label,
           value: option.value,
         }))}
+        readOnly={readOnly}
         value={value}
         onChange={handleChange}
         defaultValue={defaultValue}
-        styles={{ label: { fontWeight: 400 } }}
+        styles={{ label: { fontWeight: 500 } }}
         searchable
         withAsterisk={required}
         name={name}

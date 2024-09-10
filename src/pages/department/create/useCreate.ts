@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/app/store";
-import showToast from "@/component/ui/alert-message";
+import { default as notification } from "@/component/ui/alert-message";
 import {
   departmentApiEndpoints,
   useCreateDepartmentMutation,
@@ -103,16 +103,18 @@ const useCreate = (onClose: () => void) => {
 
   useEffect(() => {
     if (isError) {
-      showToast({ type: "error", message: "Error creating department" });
+      notification({
+        type: "error",
+        title: "Error",
+        message: "Error creating department",
+      });
     }
 
-    console.log({ isSuccess, status });
-
     if (isSuccess && status === "fulfilled") {
-      console.log("called");
 
-      showToast({
+      notification({
         type: "success",
+        title: "Success",
         message: "Department has been created successfully",
       });
 

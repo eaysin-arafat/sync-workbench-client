@@ -1,20 +1,27 @@
 import FormField from "@/component/form-field";
 import { Button } from "@mantine/core";
-import useCreate from "./useCreate";
+import useDesignationForm from "./useForm";
 
-const CreateDesignation = ({ onClose }: { onClose: () => void }) => {
+const DesignationForm = ({
+  onClose,
+  mode = "create",
+}: {
+  onClose: () => void;
+  mode?: "create" | "edit";
+}) => {
   const {
+    employeesOptions,
     control,
     errors,
     handleSubmit,
     onSubmit,
-    employeesOptions,
-    isLoading,
-  } = useCreate(onClose);
+    isSubmitting,
+  } = useDesignationForm(onClose, mode);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid md:grid-cols-2 gap-4">
+        {/* Department Name Input */}
         <FormField
           formType="input"
           control={control}
@@ -25,32 +32,38 @@ const CreateDesignation = ({ onClose }: { onClose: () => void }) => {
           required
         />
 
+        {/* Description Textarea */}
         <FormField
           formType="textarea"
-          name="description"
           control={control}
+          name="description"
           label="Description"
+          placeholder="Enter Description"
           error={errors.description?.message}
         />
 
+        {/* MultiSelect for Employees */}
         <div className="col-span-full">
           <FormField
             formType="multiSelect"
-            name="users"
+            name="employees"
             control={control}
-            placeholder="Search New Employee"
             options={employeesOptions || []}
-            error={errors.users?.message}
+            placeholder="Search New Employee"
             label="Add New Employee"
+            error={errors.employees?.message}
           />
         </div>
       </div>
 
       <div className="flex items-center gap-5 justify-end py-2 pt-5">
+        {/* Close Button */}
         <Button variant="default" onClick={onClose}>
           Close
         </Button>
-        <Button type="submit" loading={isLoading}>
+
+        {/* Submit Button */}
+        <Button type="submit" loading={isSubmitting}>
           Submit
         </Button>
       </div>
@@ -58,4 +71,4 @@ const CreateDesignation = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default CreateDesignation;
+export default DesignationForm;

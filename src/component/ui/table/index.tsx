@@ -7,12 +7,14 @@ export interface TableColumn {
   header: string;
   accessor: string;
   sortable?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render?: (item: any) => React.ReactNode;
   width?: string;
 }
 
 interface TableProps {
   columns: TableColumn[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   actions?: (item: unknown) => React.ReactNode;
 }
@@ -69,7 +71,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
                   : item?.[column?.accessor] || ""}
               </td>
             ))}
-            {actions && <td className="px-16">{actions(item)}</td>}
+            {actions && <td className="px-16">{actions(item?.id)}</td>}
           </tr>
         ))}
       </tbody>

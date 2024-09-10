@@ -1,16 +1,17 @@
 import Button from "@/component/ui/button";
 import Input from "@/component/ui/form-elements/input";
 import Select from "@/component/ui/form-elements/select";
+import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import { useReadEmployeesQuery } from "@/features/employee/employee-api";
-import { useModal } from "@/hooks/modal/useModal";
 import { QueryParams } from "@/utils/get-query-params";
+import { useDisclosure } from "@mantine/hooks";
 import CreateEmployee from "./components/create";
 import EmployeeTable from "./components/table/table";
 
 const Project = () => {
-  const { openModal, closeModal, ModalComponent } = useModal();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const options = [
     { label: "Frontend Developer", value: "1" },
@@ -48,7 +49,7 @@ const Project = () => {
         pageTitle="Employee"
         hasAddButton
         btnLabel="Add New Employee"
-        onClick={openModal}
+        onClick={open}
       />
 
       <div className="grid md:grid-cols-4 items-center gap-2">
@@ -65,9 +66,14 @@ const Project = () => {
       <EmployeeTable employees={employees?.data || []} />
       <CustomPagination />
 
-      <ModalComponent title="Authentication" size={"70rem"}>
-        <CreateEmployee onClose={closeModal} />
-      </ModalComponent>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Authentication"
+        size={"70rem"}
+      >
+        <CreateEmployee onClose={close} />
+      </Modal>
     </div>
   );
 };

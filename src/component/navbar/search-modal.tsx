@@ -1,21 +1,23 @@
-import { useModal } from "@/hooks/modal/useModal";
 import { Input } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
+import Modal from "../ui/modal";
 
 const SearchModal = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { ModalComponent, openModal } = useModal();
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div
       className="bg-gray text-gray-900 cursor-pointer block sm:hidden"
-      onClick={openModal}
+      onClick={open}
     >
       <IoSearchOutline size={23} />
 
-      <ModalComponent
-        styles={{ body: { padding: 0, margin: 0 } }}
+      <Modal
+        onClose={close}
+        opened={opened}
         withCloseButton={false}
         closeOnEscape={true}
         closeOnClickOutside={true}
@@ -27,7 +29,7 @@ const SearchModal = () => {
             onChange={(event) => setSearchTerm(event.currentTarget.value)}
           />
         </div>
-      </ModalComponent>
+      </Modal>
     </div>
   );
 };

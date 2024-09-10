@@ -38,7 +38,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         ref={ref}
         styles={{
           root: { marginTop: "8px" },
-          label: { fontWeight: 400, fontSize: "15px" },
+          label: { fontWeight: 500, fontSize: "15px" },
         }}
         size="xs"
         checked={isChecked}

@@ -26,7 +26,6 @@ const CreateRolePermission = ({ onClose }: { onClose: () => void }) => {
   const [formState, setFormState] = useState<RoleFormType>({ ...initialState });
 
   const { data: contentTypes } = useReadContentTypesQuery({});
-  console.log(contentTypes?.data);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

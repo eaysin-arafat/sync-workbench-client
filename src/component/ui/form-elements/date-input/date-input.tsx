@@ -37,10 +37,12 @@ const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
         onChange={(date) => onChange(date)}
         styles={{
           input: { height: height },
-          label: { fontWeight: 400 },
+          label: { fontWeight: 500 },
         }}
         label={label}
-        placeholder={placeholder ? placeholder : `Enter ${label}`}
+        placeholder={
+          placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
+        }
         withAsterisk={required}
         disabled={disabled}
         error={error}

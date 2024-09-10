@@ -19,16 +19,13 @@ interface UsePagination {
  * @param initialPageSize - Initial items per page (default is 10).
  * @returns Pagination state and handlers.
  */
-const usePagination = (
-  initialPage: number = 1,
-  initialPageSize: number = 10
-): UsePagination => {
-  const [currentPage, setCurrentPage] = useState<number>(initialPage);
+const usePagination = (initialPageSize: number = 10): UsePagination => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(initialPageSize);
 
   // Reset pagination to initial values
   const resetPagination = () => {
-    setCurrentPage(initialPage);
+    setCurrentPage(1);
     setItemsPerPage(initialPageSize);
   };
 

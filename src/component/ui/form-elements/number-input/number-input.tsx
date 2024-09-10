@@ -31,9 +31,11 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         value={value}
         withAsterisk={required}
         label={label}
-        styles={{ label: { fontWeight: 400 } }}
+        styles={{ label: { fontWeight: 500 } }}
         name={name}
-        placeholder={placeholder ? placeholder : `Enter ${label}`}
+        placeholder={
+          placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
+        }
         readOnly={readOnly}
         onClick={onClick}
         id={id}

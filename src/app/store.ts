@@ -1,5 +1,6 @@
 import { API } from "@/features/API/API";
 import authReducer from "@/features/auth/auth-slice";
+import modalSlice from "@/features/modal/modal-slice";
 import sidebarReducer from "@/features/sidebar-slice/sidebar-slice"; // Adjust the path
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ export const store = configureStore({
     [API.reducerPath]: API.reducer,
     auth: authReducer,
     sidebar: sidebarReducer,
+    modal: modalSlice.reducer,
   },
   devTools: import.meta.env.MODE !== "production",
   middleware: (getDefaultMiddleware) =>

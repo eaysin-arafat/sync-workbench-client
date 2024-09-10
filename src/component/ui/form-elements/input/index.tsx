@@ -25,14 +25,16 @@ const Input = React.forwardRef<HTMLInputElement, BaseInputType>(
         withAsterisk={required}
         label={label}
         error={error}
-        styles={{ label: { fontWeight: 400 } }}
+        styles={{ label: { fontWeight: 500 } }}
       >
         <MantineInput
           ref={ref} // Forward the ref to the MantineInput
           value={value}
           name={name}
           type={type}
-          placeholder={placeholder ? placeholder : `Enter ${label}`}
+          placeholder={
+            placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
+          }
           readOnly={readOnly}
           onClick={onClick}
           id={id}

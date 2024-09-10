@@ -1,10 +1,10 @@
+import { EmployeeType } from "./employee";
 import { MultipleEntityAttributes } from "./root";
-import { User } from "./user";
 
 export interface Designation {
   name: string;
   description: string;
-  users: MultipleEntityAttributes<User>;
+  employees: MultipleEntityAttributes<EmployeeType>;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;

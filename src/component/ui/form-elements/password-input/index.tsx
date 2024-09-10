@@ -14,7 +14,6 @@ type PasswordInputProps = {
   required?: boolean;
   className?: string;
   onClick?: () => void;
-  [x: string]: any;
 };
 
 const PasswordInput = ({
@@ -36,9 +35,10 @@ const PasswordInput = ({
       name={name}
       value={value}
       onChange={onChange}
+      styles={{ label: { fontWeight: 500 } }}
       onClick={onClick}
       disabled={disabled}
-      placeholder={placeholder ? placeholder : `Enter ${label}`}
+      placeholder={placeholder ? placeholder : `Enter ${label?.toLowerCase()}`}
       id={id}
       readOnly={readOnly}
       error={error}
