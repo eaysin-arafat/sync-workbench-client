@@ -2,11 +2,11 @@ import { Tooltip as MantineTooltip } from "@mantine/core";
 import React from "react";
 
 interface TooltipProps {
-  label: string;
+  label: React.ReactNode;
   children: React.ReactNode;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ label, children }) => {
+const Tooltip = ({ label, children }: TooltipProps) => {
   if (!label) return <>{children}</>;
   return (
     <MantineTooltip

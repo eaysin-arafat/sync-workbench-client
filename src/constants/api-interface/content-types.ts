@@ -193,10 +193,8 @@ interface ActionParameters {
   type: string;
   configurable: boolean;
   required: boolean;
-  default: Default;
+  default: null;
 }
-
-interface Default {}
 
 interface Subject {
   type: string;
@@ -209,10 +207,9 @@ interface Properties {
   type: string;
   configurable: boolean;
   required: boolean;
-  default: Default2;
+  default: null;
 }
 
-interface Default2 {}
 
 interface Conditions {
   type: string;

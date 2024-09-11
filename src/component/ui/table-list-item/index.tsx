@@ -1,5 +1,5 @@
 import ClickOutside from "@/layout/click-outside";
-import { getShortId } from "@/utils/generate-shortid";
+import { shortId } from "@/utils/generate-shortid";
 import { NumberFormatter, ScrollArea } from "@mantine/core";
 import { useState } from "react";
 import { MdOutlineArrowDropDown } from "react-icons/md";
@@ -34,7 +34,7 @@ const ShowTableList = ({ data }: Props) => {
               <ScrollArea style={{ maxHeight: "150px", overflowY: "auto" }}>
                 <ul className="list-none">
                   {data?.map((item, index) => (
-                    <li key={getShortId()}>
+                    <li key={shortId()}>
                       <Typography
                         variant="span"
                         className={`capitalize px-5 py-1 text-xs ${

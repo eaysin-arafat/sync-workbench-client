@@ -1,8 +1,9 @@
+import { Employee } from "@/constants/api-interface/employee";
 import {
-  EmployeePostDataType,
-  EmployeeType,
-} from "@/constants/api-interface/employee";
-import { RootResponse } from "@/constants/api-interface/root";
+  ReadDataByIdQueryType,
+  RootResponse,
+  SingleEntityAttributes,
+} from "@/constants/api-interface/root";
 import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
 import { API } from "../API/API";
 
@@ -14,7 +15,7 @@ const employeeApi = API.injectEndpoints({
      * @method POST
      */
     createEmployee: builder.mutation({
-      query: (body: { data: EmployeePostDataType }) => ({
+      query: (body) => ({
         url: `/employees`,
         method: "POST",
         body,
@@ -27,7 +28,7 @@ const employeeApi = API.injectEndpoints({
      * @url /employees
      * @method GET
      */
-    readEmployees: builder.query<RootResponse<EmployeeType>, QueryParams>({
+    readEmployees: builder.query<RootResponse<Employee>, QueryParams>({
       query: (queryParams: QueryParams) => {
         return buildQueryURL(`/employees`, queryParams);
       },
@@ -39,8 +40,12 @@ const employeeApi = API.injectEndpoints({
      * @url /employees/{id}
      * @method GET
      */
-    readEmployeeById: builder.query<EmployeeType, string>({
-      query: (id: string) => `/employees/${id}`,
+    readEmployeeById: builder.query<
+      SingleEntityAttributes<Employee>,
+      ReadDataByIdQueryType
+    >({
+      query: ({ id, queryParams }) =>
+        buildQueryURL(`/employees`, queryParams, id),
       providesTags: ["Employee"],
     }),
 
@@ -50,7 +55,7 @@ const employeeApi = API.injectEndpoints({
      * @method PUT
      */
     updateEmployee: builder.mutation({
-      query: ({ id, body }: { id: string; body: EmployeeType }) => ({
+      query: ({ id, body }) => ({
         url: `/employees/${id}`,
         method: "PUT",
         body,
@@ -64,7 +69,7 @@ const employeeApi = API.injectEndpoints({
      * @method DELETE
      */
     deleteEmployee: builder.mutation({
-      query: (id: string) => ({
+      query: (id) => ({
         url: `/employees/${id}`,
         method: "DELETE",
       }),

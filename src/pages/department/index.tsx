@@ -1,52 +1,33 @@
-import Button from "@/component/ui/button";
-import Input from "@/component/ui/form-elements/input";
+import DeleteConfirmation from "@/component/ui/delete-confirmation/delete-confirmation";
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import { useReadDepartmentsQuery } from "@/features/department/department-api";
-import { QueryParams } from "@/utils/get-query-params";
-import { useDisclosure } from "@mantine/hooks";
-import CreateDepartment from "./create";
-import DepartmentTable from "./table/table";
+import CreateDepartment from "./components/create";
+import DepartmentFilter from "./components/filter";
+import DepartmentTable from "./components/table/table";
+import useDepartment from "./hooks";
 
 const Department = () => {
-  // const [searchParams, setSearchParams] = useState({
-  //   departmentId: "",
-  //   departmentName: "",
-  // });
-  const [opened, { open, close }] = useDisclosure(false);
-
-  const queryParams: QueryParams = {
-    sort: ["department_name:asc"],
-    populate: {
-      employees: {
-        populate: {
-          user_info: {
-            fields: ["username", "first_name", "last_name"],
-            populate: {
-              avatar: {
-                fields: ["url"],
-              },
-            },
-          },
-        },
-      },
-      manager: {
-        populate: {
-          user_info: {
-            fields: ["username", "first_name", "last_name"],
-            populate: {
-              avatar: {
-                fields: ["url"],
-              },
-            },
-          },
-        },
-      },
-    },
-  };
-
-  const { data: departments } = useReadDepartmentsQuery(queryParams);
+  const {
+    closeModal,
+    currentPage,
+    departments,
+    handleBulkDeleteDepartments,
+    handleDeleteDepartment,
+    handlePageChange,
+    handleSort,
+    handleSortReset,
+    itemsPerPage,
+    openCreateDepartmentModal,
+    openDeleteDepartmentModal,
+    openEditDepartmentModal,
+    searchParams,
+    setSearchParams,
+    sortConfig,
+    isOpenCreateDepartment,
+    isOpenDeleteDepartment,
+    isOpenEditDepartment,
+  } = useDepartment();
 
   return (
     <div>
@@ -54,25 +35,60 @@ const Department = () => {
         pageTitle="Department"
         hasAddButton
         btnLabel="Add New Department"
-        onClick={open}
+        onClick={openCreateDepartmentModal}
       />
 
-      <div className="grid md:grid-cols-3 items-center gap-2">
-        <Input placeholder="Department Id" />
-        <Input placeholder="Department Name" />
-        <Button>Search</Button>
-      </div>
+      <DepartmentFilter
+        handleSortReset={handleSortReset}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+      />
 
-      <DepartmentTable departments={departments?.data || []} />
-      <CustomPagination />
+      <DepartmentTable
+        data={departments?.data || []}
+        handleDelete={openDeleteDepartmentModal}
+        handleEdit={openEditDepartmentModal}
+        handleSort={handleSort}
+        sortConfig={sortConfig}
+        handleBulkDelete={handleBulkDeleteDepartments}
+      />
+
+      <CustomPagination
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        onPageChange={handlePageChange}
+        totalItemsCount={departments?.meta?.pagination?.total || 0}
+        meta={{ pagination: { page: currentPage, pageSize: itemsPerPage } }}
+      />
 
       <Modal
-        onClose={close}
-        opened={opened}
+        onClose={closeModal}
+        opened={isOpenCreateDepartment}
         title="Create Department"
         size={"lg"}
       >
-        <CreateDepartment onClose={close} />
+        <CreateDepartment onClose={closeModal} />
+      </Modal>
+
+      <Modal
+        onClose={closeModal}
+        opened={isOpenEditDepartment}
+        title="Update Department"
+        size={"lg"}
+      >
+        <CreateDepartment onClose={closeModal} mode="edit" />
+      </Modal>
+
+      <Modal
+        onClose={closeModal}
+        opened={isOpenDeleteDepartment}
+        withCloseButton={false}
+      >
+        <DeleteConfirmation
+          title="department"
+          closeModal={closeModal}
+          handleDelete={handleDeleteDepartment}
+        />
       </Modal>
     </div>
   );

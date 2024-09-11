@@ -1,123 +1,28 @@
-import { RootState } from "@/app/store";
-import notification from "@/component/ui/alert-message";
 import Button from "@/component/ui/button";
+import DeleteConfirmation from "@/component/ui/delete-confirmation/delete-confirmation";
 import Input from "@/component/ui/form-elements/input";
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import usePagination from "@/component/ui/pagination/usePagination";
-import { designationModalTypes } from "@/constants/modal-types/modal-types";
-import {
-  useDeleteDesignationsMutation,
-  useReadDesignationsQuery,
-} from "@/features/designation/designation-api";
-import {
-  closeCreateModal,
-  closeDeleteModal,
-  closeEditModal,
-  closeViewModal,
-  openCreateModal,
-  openDeleteModal,
-  openEditModal,
-} from "@/features/modal/modal-slice";
-import { QueryParams } from "@/utils/get-query-params";
-import { Group, Text } from "@mantine/core";
-import { useDispatch, useSelector } from "react-redux";
 import DesignationForm from "./components/create";
 import DesignationTable from "./components/table/table";
+import useDesignation from "./useDesignation";
 
 const Designation = () => {
-  const { createModal, editModal, deleteModal } = useSelector(
-    (state: RootState) => state.modal
-  );
-  const dispatch = useDispatch();
-
   const {
-    pagination: { currentPage, itemsPerPage },
+    closeModal,
+    currentPage,
+    designations,
+    handleCreateDesignation,
+    handleDeleteDesignation,
+    handleEditDesignation,
+    handleOpenDeleteConfirmation,
     handlePageChange,
-  } = usePagination(10);
-
-  const queryParams: QueryParams = {
-    pagination: {
-      page: currentPage,
-      pageSize: itemsPerPage,
-    },
-    populate: {
-      employees: {
-        populate: {
-          user_info: {
-            fields: ["username", "first_name", "last_name"],
-            populate: {
-              avatar: {
-                fields: ["url"],
-              },
-            },
-          },
-        },
-      },
-    },
-  };
-
-  const { data: designations } = useReadDesignationsQuery(queryParams);
-  const [deleteDesignation] = useDeleteDesignationsMutation();
-
-  //Add Country Modal handler
-  const handleCreateDesignation = () => {
-    dispatch(
-      openCreateModal({
-        modalId: designationModalTypes?.createDesignation,
-        data: null,
-      })
-    );
-  };
-
-  //Add Country Modal handler
-  const handleEditDesignation = (id: string) => {
-    dispatch(
-      openEditModal({
-        modalId: designationModalTypes?.editDesignation,
-        data: id,
-      })
-    );
-  };
-
-  const handleOpenDeleteConfirmation = (id: string) => {
-    dispatch(
-      openDeleteModal({
-        modalId: designationModalTypes?.deleteDesignation,
-        data: id,
-      })
-    );
-  };
-
-  const handleDeleteDesignation = async () => {
-    try {
-      await deleteDesignation(deleteModal.data);
-      closeModal();
-
-      notification({
-        title: "Success!",
-        type: "success",
-        message: "Designation has been deleted successfully",
-      });
-    } catch (e) {
-      console.error("Error deleting designation:", e);
-
-      notification({
-        title: "Error!",
-        type: "error",
-        message: "Error deleting designation",
-      });
-    }
-  };
-
-  //Close Modal Handler
-  const closeModal = () => {
-    dispatch(closeCreateModal());
-    dispatch(closeEditModal());
-    dispatch(closeViewModal());
-    dispatch(closeDeleteModal());
-  };
+    isOpenCreateDesignation,
+    isOpenDeleteDesignation,
+    isOpenEditDesignation,
+    itemsPerPage,
+  } = useDesignation();
 
   return (
     <div>
@@ -139,7 +44,7 @@ const Designation = () => {
       </div>
 
       <DesignationTable
-        designations={designations?.data || []}
+        data={designations?.data || []}
         handleEdit={handleEditDesignation}
         handleDelete={handleOpenDeleteConfirmation}
       />
@@ -153,9 +58,7 @@ const Designation = () => {
       />
 
       <Modal
-        opened={
-          createModal?.modalId === designationModalTypes?.createDesignation
-        }
+        opened={isOpenCreateDesignation}
         onClose={closeModal}
         title="Create Designation"
         size={"lg"}
@@ -164,7 +67,7 @@ const Designation = () => {
       </Modal>
 
       <Modal
-        opened={editModal?.modalId === designationModalTypes?.editDesignation}
+        opened={isOpenEditDesignation}
         onClose={closeModal}
         title="Update Designation"
         size={"lg"}
@@ -173,26 +76,15 @@ const Designation = () => {
       </Modal>
 
       <Modal
-        opened={
-          deleteModal?.modalId === designationModalTypes?.deleteDesignation
-        }
-        // title="Delete Designation"
+        opened={isOpenDeleteDesignation}
         onClose={closeModal}
         withCloseButton={false}
       >
-        <Text size="sm" mb="xs" fw={500}>
-          Are you sure you want to delete this designation?
-        </Text>
-        <Text size="sm" mb="md">
-          This action cannot be undone. Deleting this designation will remove it
-          from the system permanently.
-        </Text>
-        <Group align="flex-end">
-          <Button color="red" onClick={handleDeleteDesignation}>
-            Delete
-          </Button>
-          <Button onClick={close}>Cancel</Button>
-        </Group>
+        <DeleteConfirmation
+          title="designation"
+          closeModal={closeModal}
+          handleDelete={handleDeleteDesignation}
+        />
       </Modal>
     </div>
   );

@@ -1,3 +1,5 @@
+import { QueryParams } from "@/utils/get-query-params";
+
 // Define the response type
 export interface RootResponse<T> {
   data: EntityAttributes<T>[];
@@ -24,4 +26,9 @@ export interface SingleEntityAttributes<T> {
 
 export interface MultipleEntityAttributes<T> {
   data: EntityAttributes<T>[];
+}
+
+export interface ReadDataByIdQueryType {
+  id: string;
+  queryParams?: QueryParams;
 }

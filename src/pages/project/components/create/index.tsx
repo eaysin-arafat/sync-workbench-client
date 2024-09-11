@@ -4,7 +4,6 @@ import Input from "@/component/ui/form-elements/input";
 import MultiSelect from "@/component/ui/form-elements/multi-select";
 import Select from "@/component/ui/form-elements/select";
 import Typography from "@/component/ui/typography";
-import { PostEmployeeRequest } from "@/constants/api-interface/employee";
 import { useReadDepartmentsQuery } from "@/features/department/department-api";
 import { useCreateEmployeeMutation } from "@/features/employee/employee-api";
 import { useFindUsersQuery } from "@/features/users/users-api";
@@ -64,7 +63,7 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
   }));
   const { data: departments } = useReadDepartmentsQuery({});
   const departmentOptions = departments?.data?.map((department) => ({
-    label: department?.attributes?.department_name,
+    label: department?.attributes?.name,
     value: String(department?.id),
   }));
 
@@ -86,7 +85,7 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload: PostEmployeeRequest = {
+    const payload: EmployeeFormType = {
       ...formState,
       department_id: Number(formState?.department_id),
       position_id: Number(formState?.position_id),

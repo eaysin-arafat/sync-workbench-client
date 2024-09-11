@@ -1,80 +1,30 @@
 import Button from "@/component/ui/button";
+import DeleteConfirmation from "@/component/ui/delete-confirmation/delete-confirmation";
 import Input from "@/component/ui/form-elements/input";
 import Select from "@/component/ui/form-elements/select";
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import usePagination from "@/component/ui/pagination/usePagination";
-import { useReadEmployeesQuery } from "@/features/employee/employee-api";
-import { QueryParams } from "@/utils/get-query-params";
-import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
 import CreateEmployee from "./components/create";
 import EmployeeTable from "./components/table/table";
+import useEmployee from "./useEmployee";
 
 const Employee = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-  // State for search query and sorting
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortOption, setSortOption] = useState<string>("date_of_hire:asc");
-
   const {
-    pagination: { currentPage, itemsPerPage },
+    closeModal,
+    designationOptions,
+    employees,
+    handleCreateEmployee,
+    handleDeleteEmployee,
+    handleEditEmployee,
+    handleOpenDeleteConfirmation,
     handlePageChange,
-  } = usePagination(10);
-
-  const options = [
-    { label: "Frontend Developer", value: "1" },
-    { label: "Backend Developer", value: "2" },
-    { label: "UX & UI Developer", value: "3" },
-  ];
-
-  // Define the queryParams with pagination and other parameters
-  const queryParams: QueryParams = {
-    sort: [sortOption],
-    pagination: {
-      page: currentPage,
-      pageSize: itemsPerPage,
-    },
-    populate: {
-      user_info: {
-        fields: ["username", "first_name", "last_name", "email"],
-        populate: {
-          avatar: {
-            fields: ["url"],
-          },
-          role: {
-            fields: ["name"],
-          },
-          designation: {
-            fields: ["name"],
-          },
-          department: {
-            fields: ["name"],
-          },
-        },
-      },
-      reporting_manager: {
-        populate: {
-          user_info: {
-            fields: ["username"],
-          },
-        },
-      },
-      employee_status: {
-        fields: ["name"],
-      },
-      employment_status: {
-        fields: ["name"],
-      },
-      department: {
-        fields: ["department_name"],
-      },
-    },
-  };
-
-  // Fetch employees data with the defined queryParams
-  const { data: employees } = useReadEmployeesQuery(queryParams);
+    isOpenCreateEmployee,
+    isOpenDeleteEmployee,
+    isOpenEditEmployee,
+    currentPage,
+    itemsPerPage,
+  } = useEmployee();
 
   return (
     <div>
@@ -83,14 +33,14 @@ const Employee = () => {
         pageTitle="Employee"
         hasAddButton
         btnLabel="Add New Employee"
-        onClick={open}
+        onClick={handleCreateEmployee}
       />
 
       {/* Filters for Employee Id, Name, and Position */}
       <div className="grid md:grid-cols-4 items-center gap-2">
         <Input placeholder="Employee Id" />
         <Input placeholder="Employee Name" />
-        <Select options={options} placeholder="Select Position" />
+        <Select options={designationOptions} placeholder="Select Position" />
         <div className="h-full">
           <Button size="sm" fullWidth>
             Search
@@ -99,7 +49,11 @@ const Employee = () => {
       </div>
 
       {/* Employee Table */}
-      <EmployeeTable employees={employees?.data || []} />
+      <EmployeeTable
+        data={employees?.data || []}
+        handleDelete={handleOpenDeleteConfirmation}
+        handleEdit={handleEditEmployee}
+      />
 
       {/* Pagination */}
       <CustomPagination
@@ -112,12 +66,33 @@ const Employee = () => {
 
       {/* Modal for adding a new employee */}
       <Modal
-        onClose={close}
-        opened={opened}
+        opened={isOpenCreateEmployee}
+        onClose={closeModal}
         title="Add New Employee"
         size={"70rem"}
       >
-        <CreateEmployee onClose={close} />
+        <CreateEmployee onClose={closeModal} />
+      </Modal>
+
+      <Modal
+        opened={isOpenEditEmployee}
+        onClose={closeModal}
+        title="Update Employee"
+        size={"70rem"}
+      >
+        <CreateEmployee onClose={closeModal} mode="edit" />
+      </Modal>
+
+      <Modal
+        opened={isOpenDeleteEmployee}
+        onClose={closeModal}
+        withCloseButton={false}
+      >
+        <DeleteConfirmation
+          title="employee"
+          closeModal={closeModal}
+          handleDelete={handleDeleteEmployee}
+        />
       </Modal>
     </div>
   );

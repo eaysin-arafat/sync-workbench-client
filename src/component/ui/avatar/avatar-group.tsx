@@ -1,30 +1,42 @@
-import ToolTipDefault from "@/component/ui/tooltip";
+import Tooltip from "@/component/ui/tooltip";
+import { shortId } from "@/utils/generate-shortid";
 import { Avatar, Tooltip as TooltipGroup } from "@mantine/core";
 
-type Props = { data: { url: string; name: string }[] };
+export interface AvatarDataType {
+  url: string;
+  name: string;
+}
 
-const AvatarGroup = ({ data }: Props) => {
-  const maxAvatarsToShow = 5;
+interface Props {
+  data: AvatarDataType[];
+  maxAvatarsToShow?: number;
+}
+
+const AvatarGroup = ({ data, maxAvatarsToShow = 3 }: Props) => {
   const extraAvatars = data.length > maxAvatarsToShow;
   const visibleAvatars = data.slice(0, maxAvatarsToShow);
   const hiddenAvatars = data.slice(maxAvatarsToShow);
 
   return (
-    <TooltipGroup.Group openDelay={300} closeDelay={100}>
+    <TooltipGroup.Group openDelay={100} closeDelay={100}>
       <Avatar.Group spacing="sm">
         {visibleAvatars.map((item) => (
-          <ToolTipDefault label={item?.name} key={item?.name}>
+          <Tooltip label={item?.name} key={shortId()}>
             <Avatar
               src={item?.url}
               name={item?.name}
               color="initials"
+              size={"sm"}
               radius="xl"
+              styles={{
+                root: { height: 32, width: 32 },
+              }}
             />
-          </ToolTipDefault>
+          </Tooltip>
         ))}
 
         {extraAvatars && (
-          <ToolTipDefault
+          <Tooltip
             label={
               <>
                 {hiddenAvatars.map((item) => (
@@ -33,8 +45,14 @@ const AvatarGroup = ({ data }: Props) => {
               </>
             }
           >
-            <Avatar radius="xl">+{hiddenAvatars.length}</Avatar>
-          </ToolTipDefault>
+            <Avatar
+              radius="xl"
+              size={"sm"}
+              styles={{ root: { height: 32, width: 32 } }}
+            >
+              +{hiddenAvatars.length}
+            </Avatar>
+          </Tooltip>
         )}
       </Avatar.Group>
     </TooltipGroup.Group>

@@ -58,7 +58,6 @@ const designationsApi = API.injectEndpoints({
       { id: string; queryParams?: QueryParams }
     >({
       query: ({ id, queryParams }) => ({
-        // Use buildQueryURL to dynamically add query params to the URL
         url: buildQueryURL(`/designations`, queryParams, id),
         method: "GET",
       }),

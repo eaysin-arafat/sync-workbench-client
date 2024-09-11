@@ -12,6 +12,7 @@ interface Props {
   onChange?: (value: string | null, option: Option | undefined) => void;
   options?: Option[];
   variant?: "default" | "filled" | "unstyled";
+  searchable?: boolean;
 }
 
 export type SelectProps = BaseInputType & Props;
@@ -33,6 +34,7 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
       id,
       variant = "default",
       readOnly,
+      searchable = true,
     }: SelectProps,
     ref
   ) => {
@@ -52,16 +54,18 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
           placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
         }
         variant={variant}
-        data={options.map((option) => ({
-          label: option.label,
-          value: option.value,
-        }))}
+        data={
+          options.map((option) => ({
+            label: option.label,
+            value: option.value,
+          })) || []
+        }
         readOnly={readOnly}
         value={value}
         onChange={handleChange}
         defaultValue={defaultValue}
         styles={{ label: { fontWeight: 500 } }}
-        searchable
+        searchable={searchable}
         withAsterisk={required}
         name={name}
         id={id}

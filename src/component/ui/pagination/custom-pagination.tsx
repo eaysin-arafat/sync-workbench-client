@@ -66,6 +66,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
           { label: "10", value: "10" },
           { label: "20", value: "20" },
         ]}
+        searchable={false}
         defaultValue={itemsCountPerPage.toString()}
         onChange={(value) => handleItemsPerPageChange(value)}
         placeholder="Items per page"

@@ -1,5 +1,9 @@
 import { Department } from "@/constants/api-interface/department";
-import { RootResponse } from "@/constants/api-interface/root";
+import {
+  ReadDataByIdQueryType,
+  RootResponse,
+  SingleEntityAttributes,
+} from "@/constants/api-interface/root";
 import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
 import { API } from "../API/API";
 
@@ -36,8 +40,12 @@ const departmentApi = API.injectEndpoints({
      * @uri /departments/{id}
      * @method GET
      */
-    readDepartmentById: builder.query({
-      query: (id: string) => `/departments/${id}`,
+    readDepartmentById: builder.query<
+      SingleEntityAttributes<Department>,
+      ReadDataByIdQueryType
+    >({
+      query: ({ id, queryParams }) =>
+        buildQueryURL(`/departments`, queryParams, id),
       providesTags: ["Department"],
     }),
 
@@ -47,7 +55,7 @@ const departmentApi = API.injectEndpoints({
      * @method PUT
      */
     updateDepartment: builder.mutation({
-      query: ({ id, body }: { id: string; body: Department }) => ({
+      query: ({ id, body }) => ({
         url: `/departments/${id}`,
         method: "PUT",
         body,

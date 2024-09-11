@@ -2,7 +2,7 @@ import { EmployeeType } from "./employee";
 import { MultipleEntityAttributes, SingleEntityAttributes } from "./root";
 
 export interface Department {
-  department_name: string;
+  name: string;
   description?: string;
   location?: string;
   projects?: number[];

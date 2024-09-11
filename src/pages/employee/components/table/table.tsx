@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Table from "@/component/ui/table";
+import Table, { TableColumn } from "@/component/ui/table";
 import TableActionBtn from "@/component/ui/table/table-action-btn";
-import { EmployeeType } from "@/constants/api-interface/employee";
-import { EntityAttributes } from "@/constants/api-interface/root";
+import { Employee } from "@/constants/api-interface/employee";
+import { DataTableType } from "@/constants/interface/table-types";
 import { capitalize } from "@/utils/capitalize";
 
-const columns = [
+const columns: TableColumn[] = [
   {
     header: "Employee ID",
-    accessor: "id",
-    sortable: true,
+    accessor: "identity",
   },
   {
     header: "Full Name",
     accessor: "name",
-    sortable: true,
     render: (item: any) => {
       return (
         <>
@@ -29,6 +27,7 @@ const columns = [
   {
     header: "Username",
     accessor: "username",
+    sortable: true,
   },
   {
     header: "Email",
@@ -37,10 +36,12 @@ const columns = [
   {
     header: "Date of Hire",
     accessor: "date_of_hire",
+    sortable: true,
   },
   {
     header: "Salary",
     accessor: "salary",
+    sortable: true,
   },
   {
     header: "Role",
@@ -79,8 +80,8 @@ const columns = [
     },
   },
   {
-    header: "Position Title",
-    accessor: "position_title",
+    header: "Designation",
+    accessor: "designation",
   },
   {
     header: "Department",
@@ -93,16 +94,18 @@ const columns = [
 ];
 
 const EmployeeTable = ({
-  employees,
-}: {
-  employees: EntityAttributes<EmployeeType>[];
-}) => {
-  const tableData = employees?.map((employee) => {
+  data,
+  handleDelete,
+  handleEdit,
+  handleView,
+}: DataTableType<Employee>) => {
+  const tableData = data?.map((employee) => {
     const userInfo = employee?.attributes?.user_info?.data?.attributes;
     const employeeInfo = employee?.attributes;
 
     return {
-      id: employee?.attributes?.identity,
+      id: employee?.id,
+      identity: employee?.attributes?.identity,
       name: {
         first_name: userInfo?.first_name,
         last_name: userInfo?.last_name,
@@ -116,8 +119,8 @@ const EmployeeTable = ({
         employeeInfo?.employment_status?.data?.attributes?.name,
       employee_status: employeeInfo?.employee_status?.data?.attributes?.name,
       is_internship: employeeInfo?.is_internship,
-      position_title: userInfo?.designation?.data?.attributes?.name,
-      department: employeeInfo?.department?.data?.attributes?.department_name,
+      designation: employeeInfo?.designation?.data?.attributes?.name,
+      department: employeeInfo?.employee_of_departments?.data?.attributes?.name,
       manager:
         employeeInfo?.reporting_manager?.data?.attributes?.user_info?.data
           ?.attributes?.username,
@@ -129,7 +132,16 @@ const EmployeeTable = ({
       <Table
         columns={columns}
         data={tableData}
-        actions={() => <TableActionBtn viewAction />}
+        
+        actions={(id) => (
+          <TableActionBtn
+            id={id as string}
+            viewAction
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            handleView={handleView}
+          />
+        )}
       />
     </div>
   );

@@ -1,14 +1,9 @@
 import FormField from "@/component/form-field";
+import { CreateEditFormType } from "@/constants/interface/create-edit-type";
 import { Button } from "@mantine/core";
-import useDesignationForm from "./useForm";
+import useDesignationForm from "./useDesignation";
 
-const DesignationForm = ({
-  onClose,
-  mode = "create",
-}: {
-  onClose: () => void;
-  mode?: "create" | "edit";
-}) => {
+const DesignationForm = ({ onClose, mode = "create" }: CreateEditFormType) => {
   const {
     employeesOptions,
     control,

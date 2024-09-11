@@ -1,8 +1,12 @@
+import AvatarGroup, {
+  AvatarDataType,
+} from "@/component/ui/avatar/avatar-group";
 import Table from "@/component/ui/table";
-import ShowTableList from "@/component/ui/table-list-item";
 import TableActionBtn from "@/component/ui/table/table-action-btn";
 import { Designation } from "@/constants/api-interface/designations";
-import { EntityAttributes } from "@/constants/api-interface/root";
+import { SingleEntityAttributes } from "@/constants/api-interface/root";
+import { User } from "@/constants/api-interface/user";
+import { DataTableType } from "@/constants/interface/table-types";
 
 const columns = [
   {
@@ -22,33 +26,30 @@ const columns = [
   {
     header: "Employees",
     accessor: "employees",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    render: (item: any) => {
-      const data = item?.employees?.map(
-        (employee: { username: string }) => employee?.username
-      );
-      return <ShowTableList data={data} />;
+    render: (item: { employees: SingleEntityAttributes<User>[] }) => {
+      const avatarData: AvatarDataType[] = item?.employees?.map((user) => ({
+        url: user?.data?.attributes?.avatar?.data?.attributes?.url,
+        name: user?.data?.attributes?.username,
+      }));
+
+      return <AvatarGroup data={avatarData || []} />;
     },
   },
 ];
 
 const DesignationTable = ({
-  designations,
+  data,
   handleEdit,
   handleDelete,
-}: {
-  designations: EntityAttributes<Designation>[];
-  handleEdit?: (id: string) => void;
-  handleDelete?: (id: string) => void;
-}) => {
-  const tableData = designations?.map((designation) => {
+}: DataTableType<Designation>) => {
+  const tableData = data?.map((designation) => {
     return {
       id: designation?.id,
       name: designation?.attributes?.name,
       description: designation?.attributes?.description,
-      employees: designation?.attributes?.employees?.data?.map((employee) => ({
-        username: employee?.attributes?.user_info?.data?.attributes?.username,
-      })),
+      employees: designation?.attributes?.employees?.data?.map(
+        (employee) => employee?.attributes?.user_info
+      ),
     };
   });
 

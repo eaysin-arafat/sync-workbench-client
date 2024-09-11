@@ -1,6 +1,9 @@
+import { SortType } from "@/constants/interface/table-types";
 import React from "react";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbArrowsSort } from "react-icons/tb";
 import Checkbox from "../form-elements/checkbox";
+import Tooltip from "../tooltip";
 
 // Define types for the column and data props
 export interface TableColumn {
@@ -12,20 +15,46 @@ export interface TableColumn {
   width?: string;
 }
 
-interface TableProps {
+interface TableProps extends SortType {
   columns: TableColumn[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   actions?: (item: unknown) => React.ReactNode;
+  hasBulkDelete?: boolean;
+  handleSelect?: (id: number) => void;
+  handleSelectAll?: () => void;
+  selectedIds?: number[];
+  handleOpenBulkDeleteConfirmation?: () => void;
 }
 
-const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
+const Table = ({
+  columns,
+  data,
+  actions,
+  handleSort,
+  sortConfig,
+  hasBulkDelete = true,
+  handleOpenBulkDeleteConfirmation,
+  selectedIds = [],
+  handleSelect,
+  handleSelectAll,
+}: TableProps) => {
+  const handleColumnSort = (column: string) => {
+    if (handleSort) handleSort(column);
+  };
+
+  const handleSelectId = (selectId: number) => {
+    if (handleSelect) handleSelect(selectId);
+  };
+
   return (
     <table className="w-full table-auto bg-bgColor">
       <thead>
         <tr className="bg-secondaryBg text-left">
           <th className="py-2.5 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
-            <Checkbox />
+            <Checkbox
+              checked={selectedIds?.length === data?.length}
+              onChange={handleSelectAll}
+            />
           </th>
           {columns.map((column, index) => (
             <th
@@ -34,16 +63,35 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
               style={{
                 minWidth: column?.width ? `${column?.width}px` : "200px",
               }}
+              onClick={() => handleColumnSort(column?.accessor)}
             >
               <span className="flex items-center gap-2">
-                {column.header}
-                {column.sortable && <TbArrowsSort />}
+                {column?.header}
+                {column?.sortable && (
+                  <TbArrowsSort
+                    className={
+                      sortConfig?.sortBy === column?.accessor
+                        ? sortConfig?.sortDirection === "asc"
+                          ? "!rotate-180" // Add class to indicate sort direction
+                          : ""
+                        : ""
+                    }
+                  />
+                )}
               </span>
             </th>
           ))}
           {actions && (
-            <th className="py-2.5 px-16 font-semibold text-textColor text-sm">
-              Actions
+            <th className="py-2.5 px-16 font-semibold text-textColor text-sm flex items-center justify-center">
+              {hasBulkDelete ? (
+                <Tooltip label="Multiple Delete">
+                  <button onClick={handleOpenBulkDeleteConfirmation}>
+                    <RiDeleteBin6Line />
+                  </button>
+                </Tooltip>
+              ) : (
+                "Actions"
+              )}
             </th>
           )}
         </tr>
@@ -60,7 +108,10 @@ const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
           >
             {actions && (
               <td className="px-8">
-                <Checkbox />
+                <Checkbox
+                  checked={selectedIds.includes(item.id)}
+                  onChange={() => handleSelectId(item.id)}
+                />
               </td>
             )}
 

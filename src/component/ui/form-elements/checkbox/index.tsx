@@ -1,9 +1,9 @@
 import { BaseInputType } from "@/constants/form-interface/form-input";
 import { Checkbox as MantineCheckbox } from "@mantine/core";
-import React, { useState } from "react";
+import React from "react";
 
 interface Props {
-  value?: boolean; // The boolean checked state of the checkbox
+  checked?: boolean; // The boolean checked state of the checkbox
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;
   readOnly?: boolean;
@@ -22,16 +22,16 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       onChange,
       onClick,
       readOnly,
-      value,
+      checked = false,
     } = Props;
 
-    const [isChecked, setIsChecked] = useState<boolean>(value || false);
+    // const [isChecked, setIsChecked] = useState<boolean>(value || false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newCheckedState = !isChecked;
-      setIsChecked(newCheckedState);
-      if (onChange) onChange(e);
-    };
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //   const newCheckedState = !isChecked;
+    //   setIsChecked(newCheckedState);
+    //   if (onChange) onChange(e);
+    // };
 
     return (
       <MantineCheckbox
@@ -41,8 +41,8 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           label: { fontWeight: 500, fontSize: "15px" },
         }}
         size="xs"
-        checked={isChecked}
-        onChange={handleChange}
+        checked={checked}
+        onChange={onChange}
         onClick={onClick}
         readOnly={readOnly}
         name={name}

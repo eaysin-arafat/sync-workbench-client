@@ -1,16 +1,22 @@
 import FormField from "@/component/form-field";
 import { Button } from "@mantine/core";
-import useCreate from "./useCreate";
+import useDepartmentForm from "./useDepartmentForm";
 
-const CreateDepartment = ({ onClose }: { onClose: () => void }) => {
+const CreateDepartment = ({
+  onClose,
+  mode = "create",
+}: {
+  onClose: () => void;
+  mode?: "create" | "edit";
+}) => {
   const {
     control,
     errors,
     handleSubmit,
     onSubmit,
     employeesOptions,
-    isLoading,
-  } = useCreate(onClose);
+    isSubmitting,
+  } = useDepartmentForm(onClose, mode);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -18,10 +24,10 @@ const CreateDepartment = ({ onClose }: { onClose: () => void }) => {
         <FormField
           formType="input"
           control={control}
-          name="department_name"
+          name="name"
           label="Department Name"
           placeholder="Enter Department Name"
-          error={errors.department_name?.message}
+          error={errors.name?.message}
           required
         />
 
@@ -75,11 +81,12 @@ const CreateDepartment = ({ onClose }: { onClose: () => void }) => {
         </div>
       </div>
       <div className="flex items-center gap-5 justify-end py-2 pt-5">
-        <Button type="submit" loading={isLoading}>
-          Submit
-        </Button>
         <Button variant="default" onClick={onClose}>
           Close
+        </Button>
+
+        <Button type="submit" loading={isSubmitting}>
+          Submit
         </Button>
       </div>
     </form>

@@ -18,7 +18,7 @@ import {
   getTeamManagementLink,
   getUserProfileLink,
 } from "@/routes/router-link";
-import { getShortId } from "@/utils/generate-shortid";
+import { shortId } from "@/utils/generate-shortid";
 import { BiLogoUnity } from "react-icons/bi";
 import { CgPerformance } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
@@ -49,61 +49,61 @@ export type SidebarMenuType = {
 };
 export const sidebarMenu: SidebarMenuType[] = [
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Dashboard",
     icon: <MdOutlineDashboard />,
     link: getDashboardLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Employee",
     icon: <IoPeopleOutline />,
     link: getEmployeeLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Department",
     icon: <FiMonitor />,
     link: getDepartmentLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Designation",
     icon: <TbScanPosition />,
     link: getDesignationLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Role & Permission",
     icon: <MdOutlinePermDataSetting />,
     link: getRolePermissionLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Team Management",
     icon: <BiLogoUnity />,
     link: getTeamManagementLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Project & Task",
     icon: <LiaProjectDiagramSolid />,
     link: "",
     submenu: [
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Projects",
         icon: <FaProjectDiagram />,
         link: getEmployeeAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Tasks",
         icon: <GoTasklist />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Task Board",
         icon: <VscCircuitBoard />,
         link: getBiometricAttendanceLink(),
@@ -111,19 +111,19 @@ export const sidebarMenu: SidebarMenuType[] = [
     ],
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Attendance",
     icon: <SiBasicattentiontoken />,
     link: "",
     submenu: [
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Employee",
         icon: <IoMdCodeWorking />,
         link: getEmployeeAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Biometric",
         icon: <FaFingerprint />,
         link: getBiometricAttendanceLink(),
@@ -131,109 +131,109 @@ export const sidebarMenu: SidebarMenuType[] = [
     ],
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Tickets",
     icon: <LiaTicketAltSolid />,
     link: getLeaveLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Leave",
     icon: <MdOutlineTimeToLeave />,
     link: getLeaveLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Calendar",
     icon: <CiCalendarDate />,
     link: getCalendarLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Performance Reviews",
     icon: <CgPerformance />,
     link: getPerformanceReviewsLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Payroll",
     icon: "",
     link: getPayrollLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Document",
     icon: "",
     link: getDocumentLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Reports",
     icon: <HiOutlineDocumentReport />,
     link: "",
     submenu: [
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Expense Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Invoice Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Payments Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Project Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Task Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "User Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Employee Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Daily Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Leave Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Attendance Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Payslip Report",
         icon: <HiOutlineDocumentReport />,
         link: getBiometricAttendanceLink(),
@@ -241,25 +241,25 @@ export const sidebarMenu: SidebarMenuType[] = [
     ],
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Settings",
     icon: "",
     link: getSettingsLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "User Profile & Security",
     icon: "",
     link: "",
     submenu: [
       {
-        id: getShortId(),
+        id: shortId(),
         title: "User Profile",
         icon: <GrDocumentPerformance />,
         link: getUserProfileLink(),
       },
       {
-        id: getShortId(),
+        id: shortId(),
         title: "Security",
         icon: <GrDocumentPerformance />,
         link: getSecurityLink(),
@@ -267,13 +267,13 @@ export const sidebarMenu: SidebarMenuType[] = [
     ],
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Help & Support",
     icon: "",
     link: getHelpSupportLink(),
   },
   {
-    id: getShortId(),
+    id: shortId(),
     title: "Feedback & Suggestions",
     icon: "",
     link: getFeedbackSuggestionsLink(),
