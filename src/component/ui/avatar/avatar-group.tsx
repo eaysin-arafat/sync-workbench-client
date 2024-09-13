@@ -10,9 +10,16 @@ export interface AvatarDataType {
 interface Props {
   data: AvatarDataType[];
   maxAvatarsToShow?: number;
+  isTooltip?: boolean;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
-const AvatarGroup = ({ data, maxAvatarsToShow = 3 }: Props) => {
+const AvatarGroup = ({
+  data,
+  maxAvatarsToShow = 3,
+  isTooltip = true,
+  size = "sm",
+}: Props) => {
   const extraAvatars = data.length > maxAvatarsToShow;
   const visibleAvatars = data.slice(0, maxAvatarsToShow);
   const hiddenAvatars = data.slice(maxAvatarsToShow);
@@ -21,12 +28,12 @@ const AvatarGroup = ({ data, maxAvatarsToShow = 3 }: Props) => {
     <TooltipGroup.Group openDelay={100} closeDelay={100}>
       <Avatar.Group spacing="sm">
         {visibleAvatars.map((item) => (
-          <Tooltip label={item?.name} key={shortId()}>
+          <Tooltip label={isTooltip ? item?.name : ""} key={shortId()}>
             <Avatar
               src={item?.url}
               name={item?.name}
               color="initials"
-              size={"sm"}
+              size={size}
               radius="xl"
               styles={{
                 root: { height: 32, width: 32 },
@@ -47,7 +54,7 @@ const AvatarGroup = ({ data, maxAvatarsToShow = 3 }: Props) => {
           >
             <Avatar
               radius="xl"
-              size={"sm"}
+              size={size}
               styles={{ root: { height: 32, width: 32 } }}
             >
               +{hiddenAvatars.length}

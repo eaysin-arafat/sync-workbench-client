@@ -1,7 +1,7 @@
 import usePagination from "@/component/ui/pagination/usePagination";
 import useDepartmentActions from "./useDepartmentActions";
 import useDepartmentData from "./useDepartmentData";
-import useModalHandlers from "./useModalHandlers";
+import useDepartmentModal from "./useDepartmentModal";
 
 const useDepartment = () => {
   const {
@@ -16,17 +16,20 @@ const useDepartment = () => {
     searchParams,
     sortConfig,
     setSearchParams,
+    departmentTableData,
   } = useDepartmentData(currentPage, itemsPerPage);
 
   const {
-    openCreateDepartmentModal,
-    openEditDepartmentModal,
-    openDeleteDepartmentModal,
     closeModal,
     isOpenCreateDepartment,
     isOpenDeleteDepartment,
     isOpenEditDepartment,
-  } = useModalHandlers();
+    isOpenBulkDeleteDepartment,
+    handleOpenCreateDepartmentModal,
+    handleOpenDeleteDepartmentModal,
+    handleOpenEditDepartmentModal,
+    handleOpenBulkDeleteDepartmentModal,
+  } = useDepartmentModal();
 
   const { handleDeleteDepartment, handleBulkDeleteDepartments } =
     useDepartmentActions(closeModal);
@@ -41,15 +44,18 @@ const useDepartment = () => {
     handleSort,
     handleSortReset,
     setSearchParams,
-    openCreateDepartmentModal,
-    openEditDepartmentModal,
-    openDeleteDepartmentModal,
+    handleOpenCreateDepartmentModal,
+    handleOpenEditDepartmentModal,
+    handleOpenDeleteDepartmentModal,
     handleDeleteDepartment,
     handleBulkDeleteDepartments,
     closeModal,
     isOpenCreateDepartment,
     isOpenDeleteDepartment,
     isOpenEditDepartment,
+    isOpenBulkDeleteDepartment,
+    departmentTableData,
+    handleOpenBulkDeleteDepartmentModal,
   };
 };
 

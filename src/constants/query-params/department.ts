@@ -1,3 +1,4 @@
+import { DepartmentSearchParams } from "@/pages/department/components/filter";
 import { Filters, QueryParams } from "@/utils/get-query-params";
 import { QueryArgumentsType } from "../interface/queryArgumentType";
 
@@ -6,7 +7,7 @@ export const readDepartmentQueryParams = ({
   itemsPerPage,
   searchParams,
   sortConfig,
-}: QueryArgumentsType) => {
+}: QueryArgumentsType<DepartmentSearchParams>) => {
   return {
     sort: [`${sortConfig?.sortBy}:${sortConfig?.sortDirection}`],
     filters: {

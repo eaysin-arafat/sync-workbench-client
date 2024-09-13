@@ -2,15 +2,18 @@ import { BaseInputType } from "@/constants/form-interface/form-input";
 import { Select as MantineSelect } from "@mantine/core";
 import React from "react";
 
-interface Option {
+export interface SelectOptionDataType {
   label: string;
   value: string;
 }
 
 interface Props {
   value?: string;
-  onChange?: (value: string | null, option: Option | undefined) => void;
-  options?: Option[];
+  onChange?: (
+    value: string | null,
+    option: SelectOptionDataType | undefined
+  ) => void;
+  options?: SelectOptionDataType[];
   variant?: "default" | "filled" | "unstyled";
   searchable?: boolean;
 }
@@ -38,17 +41,9 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
     }: SelectProps,
     ref
   ) => {
-    // Handle change event
-    const handleChange = (val: string | null) => {
-      const selectedOption = options.find((option) => option.value === val);
-      if (onChange) {
-        onChange(val, selectedOption);
-      }
-    };
-
     return (
       <MantineSelect
-        ref={ref} // Forward the ref to the MantineSelect
+        ref={ref}
         label={label}
         placeholder={
           placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
@@ -62,7 +57,7 @@ const Select = React.forwardRef<HTMLInputElement, SelectProps>(
         }
         readOnly={readOnly}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         defaultValue={defaultValue}
         styles={{ label: { fontWeight: 500 } }}
         searchable={searchable}

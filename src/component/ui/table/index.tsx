@@ -17,13 +17,16 @@ export interface TableColumn {
 
 interface TableProps extends SortType {
   columns: TableColumn[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
   actions?: (item: unknown) => React.ReactNode;
+  isCheckbox?: boolean;
   hasBulkDelete?: boolean;
   handleSelect?: (id: number) => void;
   handleSelectAll?: () => void;
+  handleUnselectAll?: () => void;
   selectedIds?: number[];
-  handleOpenBulkDeleteConfirmation?: () => void;
+  handleOpenBulkDeleteModal?: () => void;
 }
 
 const Table = ({
@@ -33,10 +36,12 @@ const Table = ({
   handleSort,
   sortConfig,
   hasBulkDelete = true,
-  handleOpenBulkDeleteConfirmation,
+  handleOpenBulkDeleteModal,
   selectedIds = [],
   handleSelect,
   handleSelectAll,
+  handleUnselectAll,
+  isCheckbox = true,
 }: TableProps) => {
   const handleColumnSort = (column: string) => {
     if (handleSort) handleSort(column);
@@ -46,16 +51,23 @@ const Table = ({
     if (handleSelect) handleSelect(selectId);
   };
 
+  const isChecked = data?.length ? selectedIds?.length === data?.length : false;
+  const indeterminate =
+    selectedIds?.length > 0 && selectedIds?.length < data?.length;
+
   return (
     <table className="w-full table-auto bg-bgColor">
       <thead>
         <tr className="bg-secondaryBg text-left">
-          <th className="py-2.5 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
-            <Checkbox
-              checked={selectedIds?.length === data?.length}
-              onChange={handleSelectAll}
-            />
-          </th>
+          {isCheckbox && (
+            <th className="py-2.5 px-8 font-semibold text-textColor cursor-pointer text-sm rounded-md">
+              <Checkbox
+                checked={isChecked}
+                indeterminate={indeterminate}
+                onChange={indeterminate ? handleUnselectAll : handleSelectAll}
+              />
+            </th>
+          )}
           {columns.map((column, index) => (
             <th
               key={index}
@@ -85,7 +97,7 @@ const Table = ({
             <th className="py-2.5 px-16 font-semibold text-textColor text-sm flex items-center justify-center">
               {hasBulkDelete ? (
                 <Tooltip label="Multiple Delete">
-                  <button onClick={handleOpenBulkDeleteConfirmation}>
+                  <button onClick={handleOpenBulkDeleteModal}>
                     <RiDeleteBin6Line />
                   </button>
                 </Tooltip>

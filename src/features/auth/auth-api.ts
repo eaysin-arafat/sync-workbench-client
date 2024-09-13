@@ -1,5 +1,6 @@
 import { User } from "@/constants/api-interface/user";
 import { cookieManager } from "@/utils/cookie-manager";
+import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
 import { handleAuthResponse } from "@/utils/handle-auth-response";
 import { API } from "../API/API";
 import { login, logout } from "./auth-slice";
@@ -14,19 +15,14 @@ interface LoginPayload {
   password: string;
 }
 
-interface ReadUserResponse {
-  data: User;
-  meta: { request: {}; response: {} };
-}
-
 export const authApi = API.injectEndpoints({
   endpoints: (builder) => ({
     /**
      * @description Read the current user's information
      * @returns User
      */
-    readUser: builder.query<ReadUserResponse, void>({
-      query: () => "/users/me",
+    readUser: builder.query<User, QueryParams>({
+      query: (queryParams) => buildQueryURL("/users/me", queryParams),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         const { data: user } = await queryFulfilled;
 
@@ -50,8 +46,8 @@ export const authApi = API.injectEndpoints({
      * @param body
      * @returns UserAccount
      */
-    registrationUser: builder.mutation<UserResponse, SignInDataType>({
-      query: (body: SignInDataType) => ({
+    registrationUser: builder.mutation<UserResponse, any>({
+      query: (body) => ({
         url: "/auth/local/register",
         method: "POST",
         body,

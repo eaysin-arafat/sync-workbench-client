@@ -2,11 +2,13 @@ import Button from "@/component/ui/button";
 import Input from "@/component/ui/form-elements/input";
 import { ChangeEvent } from "react";
 
+export interface DepartmentSearchParams {
+  departmentId: string;
+  departmentName: string;
+}
+
 interface DepartmentFilterProps {
-  searchParams: {
-    departmentId: string;
-    departmentName: string;
-  };
+  searchParams: DepartmentSearchParams;
   setSearchParams: (newParams: {
     departmentId: string;
     departmentName: string;

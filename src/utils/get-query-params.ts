@@ -1,18 +1,20 @@
 import qs from "qs";
 
 export interface Filters {
-  [key: string]: {
-    $eq?: string;
-    $ne?: string;
-    $lt?: number;
-    $lte?: number;
-    $gt?: number;
-    $gte?: number;
-    $in?: string[];
-    $nin?: string[];
-    $contains?: string;
-    $ncontains?: string;
-  };
+  [key: string]:
+    | {
+        $eq?: string;
+        $ne?: string;
+        $lt?: number;
+        $lte?: number;
+        $gt?: number;
+        $gte?: number;
+        $in?: string[];
+        $nin?: string[];
+        $contains?: string;
+        $ncontains?: string;
+      }
+    | Filters; // Allow nested filters
 }
 
 export interface Populate {

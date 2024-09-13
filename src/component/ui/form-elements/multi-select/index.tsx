@@ -1,17 +1,13 @@
 import { BaseInputType } from "@/constants/form-interface/form-input";
 import { MultiSelect as MantineMultiSelect } from "@mantine/core";
 import React from "react";
-
-interface Option {
-  label: string;
-  value: string;
-}
+import { SelectOptionDataType } from "../select";
 
 interface Props {
   value?: string[];
   onChange?: (value: string[]) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  options?: Option[];
+  options?: SelectOptionDataType[];
   defaultValue?: string[] | null;
 }
 

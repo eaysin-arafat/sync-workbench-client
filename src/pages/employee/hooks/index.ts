@@ -5,32 +5,46 @@ import useEmployeeModal from "./useEmployeeModal";
 
 const useEmployee = () => {
   const {
+    pagination: { currentPage, itemsPerPage },
+    handlePageChange,
+  } = usePagination(10);
+
+  const {
+    designationOptions,
+    employees,
+    employeeTableData,
+    handleSort,
+    handleSortReset,
+    searchParams,
+    setSearchParams,
+    sortConfig,
+  } = useEmployeeData({
+    currentPage,
+    itemsPerPage,
+  });
+
+  const {
     closeModal,
-    handleCreateEmployee,
-    handleEditEmployee,
-    handleOpenDeleteConfirmation,
+    handleOpenBulkDeleteEmployeeModal,
+    handleOpenEditEmployeeModal,
+    handleOpenCreateEmployeeModal,
+    handleOpenDeleteEmployeeModal,
+    isOpenBulkDeleteDepartment,
     isOpenCreateEmployee,
     isOpenDeleteEmployee,
     isOpenEditEmployee,
   } = useEmployeeModal();
 
-  const { handleDeleteEmployee } = useEmployeeActions({ closeModal });
-
-  const {
-    pagination: { currentPage, itemsPerPage },
-    handlePageChange,
-  } = usePagination(10);
-
-  const { designationOptions, employees } = useEmployeeData({
-    currentPage,
-    itemsPerPage,
-  });
+  const { handleDeleteEmployee, handleBulkDeleteEmployees } =
+    useEmployeeActions({ closeModal });
 
   return {
     closeModal,
-    handleCreateEmployee,
-    handleEditEmployee,
-    handleOpenDeleteConfirmation,
+    handleOpenBulkDeleteEmployeeModal,
+    handleOpenEditEmployeeModal,
+    handleOpenCreateEmployeeModal,
+    handleOpenDeleteEmployeeModal,
+    isOpenBulkDeleteDepartment,
     handleDeleteEmployee,
     designationOptions,
     employees,
@@ -40,6 +54,13 @@ const useEmployee = () => {
     handlePageChange,
     itemsPerPage,
     currentPage,
+    employeeTableData,
+    handleBulkDeleteEmployees,
+    handleSort,
+    handleSortReset,
+    searchParams,
+    setSearchParams,
+    sortConfig,
   };
 };
 

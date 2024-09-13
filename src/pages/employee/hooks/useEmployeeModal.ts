@@ -24,9 +24,11 @@ const useEmployeeModal = () => {
     editModal?.modalId === employeeModalTypes?.editEmployee;
   const isOpenDeleteEmployee =
     deleteModal?.modalId === employeeModalTypes?.deleteEmployee;
+  const isOpenBulkDeleteDepartment =
+    deleteModal?.modalId === employeeModalTypes?.bulkDeleteEmployee;
 
   //Add Employee Modal handler
-  const handleCreateEmployee = () => {
+  const handleOpenCreateEmployeeModal = () => {
     dispatch(
       openCreateModal({
         modalId: employeeModalTypes?.createEmployee,
@@ -36,7 +38,7 @@ const useEmployeeModal = () => {
   };
 
   //Add Employee Modal handler
-  const handleEditEmployee = (id: string) => {
+  const handleOpenEditEmployeeModal = (id: string) => {
     dispatch(
       openEditModal({
         modalId: employeeModalTypes?.editEmployee,
@@ -45,11 +47,22 @@ const useEmployeeModal = () => {
     );
   };
 
-  const handleOpenDeleteConfirmation = (id: string) => {
+  const handleOpenDeleteEmployeeModal = (id: string) => {
     dispatch(
       openDeleteModal({
         modalId: employeeModalTypes?.deleteEmployee,
         data: id,
+      })
+    );
+  };
+
+  const handleOpenBulkDeleteEmployeeModal = (selectedIds: number[]) => {
+    if (selectedIds.length === 0) return;
+
+    dispatch(
+      openDeleteModal({
+        modalId: employeeModalTypes?.bulkDeleteEmployee,
+        data: selectedIds,
       })
     );
   };
@@ -64,12 +77,14 @@ const useEmployeeModal = () => {
 
   return {
     closeModal,
-    handleOpenDeleteConfirmation,
-    handleCreateEmployee,
-    handleEditEmployee,
+    handleOpenCreateEmployeeModal,
+    handleOpenEditEmployeeModal,
+    handleOpenDeleteEmployeeModal,
+    handleOpenBulkDeleteEmployeeModal,
     isOpenCreateEmployee,
     isOpenEditEmployee,
     isOpenDeleteEmployee,
+    isOpenBulkDeleteDepartment,
   };
 };
 

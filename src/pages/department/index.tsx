@@ -18,15 +18,18 @@ const Department = () => {
     handleSort,
     handleSortReset,
     itemsPerPage,
-    openCreateDepartmentModal,
-    openDeleteDepartmentModal,
-    openEditDepartmentModal,
+    handleOpenCreateDepartmentModal,
+    handleOpenDeleteDepartmentModal,
+    handleOpenEditDepartmentModal,
+    isOpenBulkDeleteDepartment,
     searchParams,
     setSearchParams,
     sortConfig,
     isOpenCreateDepartment,
     isOpenDeleteDepartment,
     isOpenEditDepartment,
+    departmentTableData,
+    handleOpenBulkDeleteDepartmentModal,
   } = useDepartment();
 
   return (
@@ -35,7 +38,7 @@ const Department = () => {
         pageTitle="Department"
         hasAddButton
         btnLabel="Add New Department"
-        onClick={openCreateDepartmentModal}
+        onClick={handleOpenCreateDepartmentModal}
       />
 
       <DepartmentFilter
@@ -45,12 +48,12 @@ const Department = () => {
       />
 
       <DepartmentTable
-        data={departments?.data || []}
-        handleDelete={openDeleteDepartmentModal}
-        handleEdit={openEditDepartmentModal}
+        data={departmentTableData || []}
+        handleOpenDeleteModal={handleOpenDeleteDepartmentModal}
+        handleOpenEditModal={handleOpenEditDepartmentModal}
+        handleOpenBulkDeleteModal={handleOpenBulkDeleteDepartmentModal}
         handleSort={handleSort}
         sortConfig={sortConfig}
-        handleBulkDelete={handleBulkDeleteDepartments}
       />
 
       <CustomPagination
@@ -88,6 +91,18 @@ const Department = () => {
           title="department"
           closeModal={closeModal}
           handleDelete={handleDeleteDepartment}
+        />
+      </Modal>
+
+      <Modal
+        onClose={closeModal}
+        opened={isOpenBulkDeleteDepartment}
+        withCloseButton={false}
+      >
+        <DeleteConfirmation
+          title="department"
+          closeModal={closeModal}
+          handleBulkDelete={handleBulkDeleteDepartments}
         />
       </Modal>
     </div>

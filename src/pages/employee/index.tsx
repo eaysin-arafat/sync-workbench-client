@@ -1,30 +1,41 @@
-import Button from "@/component/ui/button";
 import DeleteConfirmation from "@/component/ui/delete-confirmation/delete-confirmation";
-import Input from "@/component/ui/form-elements/input";
-import Select from "@/component/ui/form-elements/select";
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import CreateEmployee from "./components/create";
+import useGetEmployeeInfo from "@/hooks/shared/useGetEmployeeInfo";
+import EmployeeForm from "./components/create";
+import EmployeeFilter from "./components/filter";
 import EmployeeTable from "./components/table/table";
-import useEmployee from "./useEmployee";
+import useEmployee from "./hooks";
 
 const Employee = () => {
   const {
     closeModal,
     designationOptions,
     employees,
-    handleCreateEmployee,
     handleDeleteEmployee,
-    handleEditEmployee,
-    handleOpenDeleteConfirmation,
+    handleOpenBulkDeleteEmployeeModal,
+    handleOpenCreateEmployeeModal,
+    handleOpenDeleteEmployeeModal,
+    handleOpenEditEmployeeModal,
+    isOpenBulkDeleteDepartment,
     handlePageChange,
     isOpenCreateEmployee,
     isOpenDeleteEmployee,
     isOpenEditEmployee,
     currentPage,
     itemsPerPage,
+    employeeTableData,
+    handleBulkDeleteEmployees,
+    handleSort,
+    handleSortReset,
+    searchParams,
+    setSearchParams,
+    sortConfig,
   } = useEmployee();
+
+  const employee = useGetEmployeeInfo();
+  console.log(employee);
 
   return (
     <div>
@@ -33,26 +44,25 @@ const Employee = () => {
         pageTitle="Employee"
         hasAddButton
         btnLabel="Add New Employee"
-        onClick={handleCreateEmployee}
+        onClick={handleOpenCreateEmployeeModal}
       />
 
       {/* Filters for Employee Id, Name, and Position */}
-      <div className="grid md:grid-cols-4 items-center gap-2">
-        <Input placeholder="Employee Id" />
-        <Input placeholder="Employee Name" />
-        <Select options={designationOptions} placeholder="Select Position" />
-        <div className="h-full">
-          <Button size="sm" fullWidth>
-            Search
-          </Button>
-        </div>
-      </div>
+      <EmployeeFilter
+        designationOptions={designationOptions || []}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        handleSortReset={handleSortReset}
+      />
 
       {/* Employee Table */}
       <EmployeeTable
-        data={employees?.data || []}
-        handleDelete={handleOpenDeleteConfirmation}
-        handleEdit={handleEditEmployee}
+        data={employeeTableData || []}
+        handleOpenDeleteModal={handleOpenDeleteEmployeeModal}
+        handleOpenBulkDeleteModal={handleOpenBulkDeleteEmployeeModal}
+        handleOpenEditModal={handleOpenEditEmployeeModal}
+        handleSort={handleSort}
+        sortConfig={sortConfig}
       />
 
       {/* Pagination */}
@@ -71,7 +81,7 @@ const Employee = () => {
         title="Add New Employee"
         size={"70rem"}
       >
-        <CreateEmployee onClose={closeModal} />
+        <EmployeeForm onClose={closeModal} />
       </Modal>
 
       <Modal
@@ -80,7 +90,7 @@ const Employee = () => {
         title="Update Employee"
         size={"70rem"}
       >
-        <CreateEmployee onClose={closeModal} mode="edit" />
+        <EmployeeForm onClose={closeModal} mode="edit" />
       </Modal>
 
       <Modal
@@ -92,6 +102,18 @@ const Employee = () => {
           title="employee"
           closeModal={closeModal}
           handleDelete={handleDeleteEmployee}
+        />
+      </Modal>
+
+      <Modal
+        onClose={closeModal}
+        opened={isOpenBulkDeleteDepartment}
+        withCloseButton={false}
+      >
+        <DeleteConfirmation
+          title="employee"
+          closeModal={closeModal}
+          handleBulkDelete={handleBulkDeleteEmployees}
         />
       </Modal>
     </div>

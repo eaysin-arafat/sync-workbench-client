@@ -2,6 +2,7 @@ import { SortConfigType } from "@/constants/interface/table-types";
 import { readDepartmentQueryParams } from "@/constants/query-params/department";
 import { useReadDepartmentsQuery } from "@/features/department/department-api";
 import { useCallback, useState } from "react";
+import { DepartmentSearchParams } from "../components/filter";
 
 const initialSortConfig = {
   sortBy: "name",
@@ -13,8 +14,8 @@ const initialSearchParams = {
   departmentName: "",
 };
 
-const useDepartmentData = (currentPage: number, itemsPerPage: number) => {
-  const [searchParams, setSearchParams] = useState({
+const useDepartmentData = (currentPage?: number, itemsPerPage?: number) => {
+  const [searchParams, setSearchParams] = useState<DepartmentSearchParams>({
     ...initialSearchParams,
   });
   const [sortConfig, setSortConfig] = useState<SortConfigType>({
@@ -29,6 +30,28 @@ const useDepartmentData = (currentPage: number, itemsPerPage: number) => {
       sortConfig,
     })
   );
+
+  const departmentTableData = departments?.data?.map((department) => {
+    const { name, description, location, employees, manager } =
+      department?.attributes || [];
+
+    return {
+      id: department?.id,
+      name,
+      description,
+      location,
+      manager: {
+        url: manager?.data?.attributes?.user_info?.data?.attributes?.avatar
+          ?.data?.attributes?.url,
+        name: manager?.data?.attributes?.user_info?.data?.attributes?.username,
+      },
+      employees: employees?.data?.map((item) => ({
+        url: item?.attributes?.user_info?.data?.attributes?.avatar?.data
+          ?.attributes?.url,
+        name: item?.attributes?.user_info?.data?.attributes?.username,
+      })),
+    };
+  });
 
   const handleSort = useCallback((column: string) => {
     setSortConfig((prevSortConfig) => ({
@@ -53,6 +76,7 @@ const useDepartmentData = (currentPage: number, itemsPerPage: number) => {
     searchParams,
     sortConfig,
     setSearchParams,
+    departmentTableData,
   };
 };
 

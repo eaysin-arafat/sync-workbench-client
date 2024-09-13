@@ -8,6 +8,7 @@ export const employeeModalTypes = Object.freeze({
   createEmployee: "createEmployee",
   editEmployee: "editEmployee",
   deleteEmployee: "deleteEmployee",
+  bulkDeleteEmployee: "bulkDeleteEmployee",
 });
 
 export const departmentModalTypes = Object.freeze({

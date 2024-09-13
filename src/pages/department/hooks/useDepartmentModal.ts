@@ -13,7 +13,7 @@ import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Separate modal handling logic
-const useModalHandlers = () => {
+const useDepartmentModal = () => {
   const dispatch = useDispatch();
   const { createModal, editModal, deleteModal } = useSelector(
     (state: RootState) => state.modal
@@ -25,8 +25,10 @@ const useModalHandlers = () => {
     editModal?.modalId === departmentModalTypes?.editDepartment;
   const isOpenDeleteDepartment =
     deleteModal?.modalId === departmentModalTypes?.deleteDepartment;
+  const isOpenBulkDeleteDepartment =
+    deleteModal?.modalId === departmentModalTypes?.bulkDeleteDepartment;
 
-  const openCreateDepartmentModal = useCallback(() => {
+  const handleOpenCreateDepartmentModal = useCallback(() => {
     dispatch(
       openCreateModal({
         modalId: departmentModalTypes?.createDepartment,
@@ -35,7 +37,7 @@ const useModalHandlers = () => {
     );
   }, [dispatch]);
 
-  const openEditDepartmentModal = useCallback(
+  const handleOpenEditDepartmentModal = useCallback(
     (id: string) => {
       dispatch(
         openEditModal({
@@ -47,7 +49,7 @@ const useModalHandlers = () => {
     [dispatch]
   );
 
-  const openDeleteDepartmentModal = useCallback(
+  const handleOpenDeleteDepartmentModal = useCallback(
     (id: string) => {
       dispatch(
         openDeleteModal({
@@ -59,6 +61,17 @@ const useModalHandlers = () => {
     [dispatch]
   );
 
+  const handleOpenBulkDeleteDepartmentModal = (selectedIds: number[]) => {
+    if (selectedIds.length < 0) return;
+
+    dispatch(
+      openDeleteModal({
+        modalId: departmentModalTypes?.bulkDeleteDepartment,
+        data: selectedIds,
+      })
+    );
+  };
+
   const closeModal = useCallback(() => {
     dispatch(closeCreateModal());
     dispatch(closeEditModal());
@@ -67,14 +80,16 @@ const useModalHandlers = () => {
   }, [dispatch]);
 
   return {
-    openCreateDepartmentModal,
-    openEditDepartmentModal,
-    openDeleteDepartmentModal,
+    handleOpenCreateDepartmentModal,
+    handleOpenEditDepartmentModal,
+    handleOpenDeleteDepartmentModal,
     closeModal,
     isOpenCreateDepartment,
     isOpenEditDepartment,
     isOpenDeleteDepartment,
+    isOpenBulkDeleteDepartment,
+    handleOpenBulkDeleteDepartmentModal,
   };
 };
 
-export default useModalHandlers;
+export default useDepartmentModal;

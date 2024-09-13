@@ -28,7 +28,30 @@ const useEmployeeActions = ({ closeModal }: { closeModal: () => void }) => {
     }
   };
 
-  return { handleDeleteEmployee };
+  const handleBulkDeleteEmployees = async () => {
+    const ids: number[] = deleteModal?.data || [];
+    const deletePromises = ids?.map((id: number) => deleteEmployee(String(id)));
+
+    try {
+      await Promise.all(deletePromises);
+      notification({
+        title: "Success!",
+        type: "success",
+        message: "Employees have been deleted successfully",
+      });
+
+      closeModal();
+    } catch (error) {
+      console.error("Error deleting bulk employees:", error);
+      notification({
+        title: "Error!",
+        type: "error",
+        message: "Error deleting employees",
+      });
+    }
+  };
+
+  return { handleDeleteEmployee, handleBulkDeleteEmployees };
 };
 
 export default useEmployeeActions;

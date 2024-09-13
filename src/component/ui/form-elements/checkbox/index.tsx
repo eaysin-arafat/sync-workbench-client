@@ -7,6 +7,7 @@ interface Props {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;
   readOnly?: boolean;
+  indeterminate?: boolean;
 }
 
 export type CheckboxProps = BaseInputType & Props;
@@ -22,16 +23,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       onChange,
       onClick,
       readOnly,
+      indeterminate,
       checked = false,
     } = Props;
-
-    // const [isChecked, setIsChecked] = useState<boolean>(value || false);
-
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //   const newCheckedState = !isChecked;
-    //   setIsChecked(newCheckedState);
-    //   if (onChange) onChange(e);
-    // };
 
     return (
       <MantineCheckbox
@@ -47,6 +41,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         readOnly={readOnly}
         name={name}
         label={label}
+        indeterminate={indeterminate}
         id={id}
         error={error}
         disabled={disabled}

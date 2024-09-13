@@ -2,11 +2,11 @@ import React, { ReactNode } from "react";
 
 interface CardDataStatsProps {
   title: string;
-  total: string;
-  rate: string;
+  total: number;
+  rate?: string;
   levelUp?: boolean;
   levelDown?: boolean;
-  children: ReactNode;
+  icon: ReactNode;
 }
 
 const CardDataStats: React.FC<CardDataStatsProps> = ({
@@ -15,15 +15,15 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
   rate,
   levelUp,
   levelDown,
-  children,
+  icon,
 }) => {
   return (
     <div className="rounded-sm bg-secondaryBg py-6 px-7.5 shadow-default">
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta2">
-        {children}
+        {icon}
       </div>
 
-      <div className="mt-4 flex items-end justify-between">
+      <div className="mt-4 ml-2 flex items-end justify-between">
         <div>
           <h4 className="text-title-md font-bold text-textColor">{total}</h4>
           <span className="text-sm font-medium text-textColor">{title}</span>

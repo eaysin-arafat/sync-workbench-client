@@ -1,19 +1,23 @@
 import { RootState } from "@/app/store";
-import UserOne from "@/assets/images/user/user-01.png";
 import { logout } from "@/features/auth/auth-slice";
 import { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { GrContact } from "react-icons/gr";
+import { IoIosArrowDown } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ClickOutside from "../../layout/click-outside";
+import AvatarGroup from "../ui/avatar/avatar-group";
 
 const DropdownUser = () => {
   const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user } = useSelector((state: RootState) => state?.auth);
+  const { data: employee } = useSelector((state: RootState) => state?.employee);
+  const name = `${user?.first_name} ${user?.last_name}`;
+  const avatarURL = user?.avatar?.data?.attributes?.url || "";
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -24,32 +28,20 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-textColor capitalize">
-            {user?.first_name} {user?.last_name}
+            {name}
           </span>
-          <span className="block text-xs text-textGray">
-            {user?.position_title}
+          <span className="block text-xs text-textGray mt-0.5">
+            {employee?.designation?.data?.attributes?.name}
           </span>
         </span>
 
-        <span className="h-8 w-8 rounded-full">
-          <img src={UserOne} alt="User" />
-        </span>
+        {/* <img src={UserOne} alt="User" /> */}
+        <AvatarGroup
+          data={[{ name: name, url: avatarURL }]}
+          isTooltip={false}
+        />
 
-        <svg
-          className="hidden fill-current sm:block"
-          width="12"
-          height="8"
-          viewBox="0 0 12 8"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"
-            fill=""
-          />
-        </svg>
+        <IoIosArrowDown size={18} />
       </Link>
 
       {/* <!-- Dropdown Start --> */}

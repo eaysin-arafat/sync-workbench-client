@@ -25,7 +25,7 @@ export interface Employee {
   performance_reviews: ReferenceType;
   employee_skills: ReferenceType;
   employee_certifications: ReferenceType;
-  user_info: SingleEntityAttributes<User>;
+  user_info?: SingleEntityAttributes<User>;
   reporting_employees: MultipleEntityAttributes<Employee>;
   reporting_manager: SingleEntityAttributes<Employee>;
   manager_of_departments: SingleEntityAttributes<Department>;

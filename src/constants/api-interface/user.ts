@@ -22,6 +22,7 @@ export interface User {
   phone: number;
   zip_code: number;
   employee_skill: any;
+  is_employee: boolean;
   employee_certification: any;
   work_experiences: any[];
   designation: SingleEntityAttributes<Designation>;

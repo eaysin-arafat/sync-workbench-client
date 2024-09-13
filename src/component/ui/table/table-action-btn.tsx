@@ -5,9 +5,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface TableActionBtnProps {
   viewAction?: boolean; // Optional dynamic view button
-  handleEdit?: (id: string) => void; // Default edit action
-  handleDelete?: (id: string) => void; // Default delete action
-  handleView?: (id: string) => void;
+  handleOpenEditModal?: (id: string) => void; // Default edit action
+  handleOpenDeleteModal?: (id: string) => void; // Default delete action
+  handleOpenViewModal?: (id: string) => void;
   spacing?: string; // Optional custom spacing between buttons
   buttonClass?: string; // Optional custom button class
   id?: string;
@@ -15,23 +15,23 @@ interface TableActionBtnProps {
 
 const TableActionBtn = ({
   viewAction,
-  handleEdit,
-  handleDelete,
   spacing = "space-x-3.5",
   buttonClass = "hover:text-primary",
-  handleView,
+  handleOpenDeleteModal,
+  handleOpenEditModal,
+  handleOpenViewModal,
   id = "",
 }: TableActionBtnProps) => {
   const handleViewAction = (id: string) => {
-    if (handleView) handleView(id);
+    if (handleOpenViewModal) handleOpenViewModal(id);
   };
 
   const handleEditAction = (id: string) => {
-    if (handleEdit) handleEdit(id);
+    if (handleOpenEditModal) handleOpenEditModal(id);
   };
 
   const handleDeleteAction = (id: string) => {
-    if (handleDelete) handleDelete(id);
+    if (handleOpenDeleteModal) handleOpenDeleteModal(id);
   };
 
   return (

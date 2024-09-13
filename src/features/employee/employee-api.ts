@@ -6,6 +6,7 @@ import {
 } from "@/constants/api-interface/root";
 import { buildQueryURL, QueryParams } from "@/utils/get-query-params";
 import { API } from "../API/API";
+import { removeEmployee, setEmployee } from "./employee-slice";
 
 const employeeApi = API.injectEndpoints({
   endpoints: (builder) => ({
@@ -50,6 +51,33 @@ const employeeApi = API.injectEndpoints({
     }),
 
     /**
+     * @description read employee by user ID
+     * @url /employee/get-employee-by-user/{userId}
+     * @method GET
+     */
+    readEmployeeByUserId: builder.query<
+      SingleEntityAttributes<Employee>,
+      { userId: string }
+    >({
+      query: ({ userId }) => `/employee/get-employee-by-user/${userId}`,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data: employee } = await queryFulfilled;
+
+          if (employee) {
+            dispatch(setEmployee(employee));
+          } else {
+            dispatch(removeEmployee());
+          }
+        } catch (error) {
+          console.error(error);
+          dispatch(removeEmployee());
+        }
+      },
+      providesTags: ["Employee"],
+    }),
+
+    /**
      * @description update employee by ID
      * @url /employees/{id}
      * @method PUT
@@ -85,6 +113,7 @@ export const {
   useReadEmployeeByIdQuery,
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
+  useReadEmployeeByUserIdQuery,
 } = employeeApi;
 
 // Export API endpoints

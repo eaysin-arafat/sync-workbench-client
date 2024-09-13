@@ -1,13 +1,31 @@
-import { QueryParams } from "@/utils/get-query-params";
+import { EmployeeSearchParams } from "@/pages/employee/components/filter";
+import { Filters, QueryParams } from "@/utils/get-query-params";
 import { QueryArgumentsType } from "../interface/queryArgumentType";
 
 // Define the queryParams with pagination and other parameters
 export const readEmployeeQueryParams = ({
   currentPage,
   itemsPerPage,
-}: QueryArgumentsType): QueryParams => {
+  searchParams,
+  sortConfig,
+}: QueryArgumentsType<EmployeeSearchParams>): QueryParams => {
   return {
-    sort: ["date_of_hire:asc"],
+    sort: [`${sortConfig?.sortBy}:${sortConfig?.sortDirection}`],
+    filters: {
+      identity: searchParams?.identity
+        ? { $contains: searchParams?.identity }
+        : undefined,
+      user_info: searchParams?.username
+        ? {
+            username: {
+              $contains: searchParams?.username,
+            },
+          }
+        : undefined,
+      designation: searchParams?.designation
+        ? { $eq: searchParams?.designation }
+        : undefined,
+    } as Filters,
     pagination: {
       page: currentPage,
       pageSize: itemsPerPage,

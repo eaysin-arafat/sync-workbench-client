@@ -1,5 +1,6 @@
 import { API } from "@/features/API/API";
 import authReducer from "@/features/auth/auth-slice";
+import employeeReducer from "@/features/employee/employee-slice";
 import modalSlice from "@/features/modal/modal-slice";
 import sidebarReducer from "@/features/sidebar-slice/sidebar-slice"; // Adjust the path
 import { configureStore } from "@reduxjs/toolkit";
@@ -9,6 +10,7 @@ export const store = configureStore({
   reducer: {
     [API.reducerPath]: API.reducer,
     auth: authReducer,
+    employee: employeeReducer,
     sidebar: sidebarReducer,
     modal: modalSlice.reducer,
   },

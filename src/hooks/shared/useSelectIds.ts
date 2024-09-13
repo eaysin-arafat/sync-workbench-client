@@ -21,7 +21,11 @@ const useSelectIds = (data: DataItem[]) => {
     }
   };
 
-  return { selectedIds, handleSelect, handleSelectAll };
+  const handleUnselectAll = () => {
+    setSelectedIds([]);
+  };
+
+  return { selectedIds, handleSelect, handleSelectAll, handleUnselectAll };
 };
 
 export default useSelectIds;
