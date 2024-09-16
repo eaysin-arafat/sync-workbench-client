@@ -1,7 +1,7 @@
 import FormField from "@/component/form-field";
 import { CreateEditFormType } from "@/constants/interface/create-edit-type";
 import { Button } from "@mantine/core";
-import useEmployeeForm from "./useEmployeeForm";
+import useEmployeeForm from "../../hooks/useEmployeeForm";
 
 const EmployeeForm = ({ onClose, mode = "create" }: CreateEditFormType) => {
   const {

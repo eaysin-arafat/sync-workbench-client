@@ -1,7 +1,7 @@
 import usePagination from "@/component/ui/pagination/usePagination";
 import useDepartmentActions from "./useDepartmentActions";
 import useDepartmentData from "./useDepartmentData";
-import useDepartmentModal from "./useDepartmentModal";
+import useDepartmentModal from "./useDepartmentModals";
 
 const useDepartment = () => {
   const {

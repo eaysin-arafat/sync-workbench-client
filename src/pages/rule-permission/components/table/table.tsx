@@ -49,7 +49,7 @@ const RolePermissionTable = ({ roles }: { roles: Role[] }) => {
         <Table
           columns={columns}
           data={tableData}
-          actions={(item) => <TableActionBtn data={item} />}
+          actions={() => <TableActionBtn />}
         />
       </div>
     </div>

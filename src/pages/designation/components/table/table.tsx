@@ -4,7 +4,10 @@ import AvatarGroup, {
 import Table from "@/component/ui/table";
 import TableActionBtn from "@/component/ui/table/table-action-btn";
 import { Designation } from "@/constants/api-interface/designations";
-import { SingleEntityAttributes } from "@/constants/api-interface/root";
+import {
+  EntityAttributes,
+  SingleEntityAttributes,
+} from "@/constants/api-interface/root";
 import { User } from "@/constants/api-interface/user";
 import { DataTableType } from "@/constants/interface/table-types";
 
@@ -39,10 +42,10 @@ const columns = [
 
 const DesignationTable = ({
   data,
-  handleEdit,
-  handleDelete,
-}: DataTableType<Designation>) => {
-  const tableData = data?.map((designation) => {
+  handleOpenEditModal,
+  handleOpenDeleteModal,
+}: DataTableType) => {
+  const tableData = data?.map((designation: EntityAttributes<Designation>) => {
     return {
       id: designation?.id,
       name: designation?.attributes?.name,
@@ -61,8 +64,8 @@ const DesignationTable = ({
         actions={(id) => (
           <TableActionBtn
             id={id as string}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
+            handleOpenEditModal={handleOpenEditModal}
+            handleOpenDeleteModal={handleOpenDeleteModal}
             viewAction
           />
         )}

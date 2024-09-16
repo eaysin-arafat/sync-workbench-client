@@ -52,6 +52,7 @@ const Table = ({
   };
 
   const isChecked = data?.length ? selectedIds?.length === data?.length : false;
+
   const indeterminate =
     selectedIds?.length > 0 && selectedIds?.length < data?.length;
 
@@ -121,7 +122,7 @@ const Table = ({
             {actions && (
               <td className="px-8">
                 <Checkbox
-                  checked={selectedIds.includes(item.id)}
+                  checked={selectedIds.includes(item?.id) || false}
                   onChange={() => handleSelectId(item.id)}
                 />
               </td>

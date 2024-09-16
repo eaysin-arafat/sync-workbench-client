@@ -4,9 +4,9 @@ import Input from "@/component/ui/form-elements/input";
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import DesignationForm from "./components/create";
+import DesignationForm from "./components/form";
 import DesignationTable from "./components/table/table";
-import useDesignation from "./useDesignation";
+import useDesignation from "./hooks/useDesignation";
 
 const Designation = () => {
   const {
@@ -45,8 +45,8 @@ const Designation = () => {
 
       <DesignationTable
         data={designations?.data || []}
-        handleEdit={handleEditDesignation}
-        handleDelete={handleOpenDeleteConfirmation}
+        handleOpenEditModal={handleEditDesignation}
+        handleOpenDeleteModal={handleOpenDeleteConfirmation}
       />
 
       <CustomPagination

@@ -1,4 +1,4 @@
-import { EmployeeSearchParams } from "@/pages/employee/components/filter";
+import { EmployeeSearchParams } from "@/pages/employee/components/filter/filter";
 import { Filters, QueryParams } from "@/utils/get-query-params";
 import { QueryArgumentsType } from "../interface/queryArgumentType";
 

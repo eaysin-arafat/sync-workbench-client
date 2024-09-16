@@ -10,6 +10,9 @@ import MultiSelect, {
   MultiSelectProps,
 } from "../ui/form-elements/multi-select";
 import NumberInput from "../ui/form-elements/number-input/number-input";
+import PasswordInput, {
+  PasswordInputProps,
+} from "../ui/form-elements/password-input";
 import Textarea from "../ui/form-elements/text-area/text-area";
 
 const formComponents = {
@@ -20,6 +23,7 @@ const formComponents = {
   date: DateInput,
   input: Input,
   checkbox: CheckBox,
+  password: PasswordInput,
 };
 
 type FormComponentKeys = keyof typeof formComponents;
@@ -37,6 +41,7 @@ type FormFieldProps<T extends FieldValues> = {
   | DateInputProps
   | BaseInputType
   | CheckboxProps
+  | PasswordInputProps
 );
 
 const FormField = <T extends FieldValues>({

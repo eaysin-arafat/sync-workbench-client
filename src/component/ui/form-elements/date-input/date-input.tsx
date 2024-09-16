@@ -5,7 +5,7 @@ import React from "react";
 // INPUT PROPS
 type Props = {
   value?: Date;
-  onChange: (date: Date | null) => void;
+  onChange?: (date: Date | null) => void;
   height?: string;
 };
 
@@ -34,7 +34,9 @@ const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
         ref={ref} // Forward the ref to the MantineDateInput
         value={value}
         name={name}
-        onChange={(date) => onChange(date)}
+        onChange={(date) => {
+          if (onChange) onChange(date);
+        }}
         styles={{
           input: { height: height },
           label: { fontWeight: 500 },

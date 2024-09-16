@@ -2,9 +2,9 @@ import DeleteConfirmation from "@/component/ui/delete-confirmation/delete-confir
 import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
-import CreateDepartment from "./components/create";
 import DepartmentFilter from "./components/filter";
-import DepartmentTable from "./components/table/table";
+import CreateDepartment from "./components/form";
+import DepartmentTable from "./components/table";
 import useDepartment from "./hooks";
 
 const Department = () => {

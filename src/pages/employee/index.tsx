@@ -3,8 +3,8 @@ import Modal from "@/component/ui/modal";
 import PageHeader from "@/component/ui/page-header";
 import CustomPagination from "@/component/ui/pagination/custom-pagination";
 import useGetEmployeeInfo from "@/hooks/shared/useGetEmployeeInfo";
-import EmployeeForm from "./components/create";
-import EmployeeFilter from "./components/filter";
+import EmployeeFilter from "./components/filter/filter";
+import EmployeeForm from "./components/form";
 import EmployeeTable from "./components/table/table";
 import useEmployee from "./hooks";
 

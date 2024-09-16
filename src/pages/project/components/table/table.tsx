@@ -1,6 +1,6 @@
 import Table from "@/component/ui/table";
 import TableActionBtn from "@/component/ui/table/table-action-btn";
-import { EmployeeType } from "@/constants/api-interface/employee";
+import { Employee } from "@/constants/api-interface/employee";
 import { EntityAttributes } from "@/constants/api-interface/root";
 
 const columns = [
@@ -90,7 +90,7 @@ const columns = [
 const ProjectTable = ({
   employees,
 }: {
-  employees: EntityAttributes<EmployeeType>[];
+  employees: EntityAttributes<Employee>[];
 }) => {
   const tableData = employees?.map((employee) => {
     const userInfo = employee?.attributes?.user_info?.data?.attributes;
@@ -110,12 +110,11 @@ const ProjectTable = ({
       employment_status: employeeInfo?.employment_status,
       employee_status: employeeInfo?.employment_status,
       is_internship: employeeInfo?.is_internship,
-      position_title: employeeInfo?.position_id,
+      position_title: employeeInfo?.designation?.data?.attributes?.name,
       department: "",
       manager: "",
     };
   });
-
 
   return (
     <div className="rounded-sm bg-bgColor pt-6 shadow-1">
@@ -123,7 +122,7 @@ const ProjectTable = ({
         <Table
           columns={columns}
           data={tableData}
-          actions={(item) => <TableActionBtn data={item} />}
+          actions={() => <TableActionBtn />}
         />
       </div>
     </div>

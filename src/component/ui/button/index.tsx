@@ -7,12 +7,15 @@ import React from "react";
 
 interface ButtonProps extends MantineButtonProps {
   variant?: "filled" | "outline" | "light" | "subtle" | "link" | "gradient";
-  color?: string; // Custom color support
+  color?: string;
   gradientFrom?: string;
   gradientTo?: string;
   gradientDeg?: number;
   loading?: boolean;
   onClick?: () => void;
+  type?: "button" | "reset" | "submit";
+  leftSection?: React.ReactNode;
+  rightSection?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -24,6 +27,9 @@ const Button: React.FC<ButtonProps> = ({
   gradientDeg = 45,
   loading = false,
   onClick,
+  type = "button",
+  leftSection,
+  rightSection,
   ...props
 }) => {
   // Define styles for gradient variant
@@ -40,8 +46,11 @@ const Button: React.FC<ButtonProps> = ({
       variant={variant}
       color={color}
       style={gradientStyle}
+      type={type}
       loading={loading}
       onClick={onClick}
+      leftSection={leftSection}
+      rightSection={rightSection}
       {...props}
     >
       {loading && <Loader size={20} />}

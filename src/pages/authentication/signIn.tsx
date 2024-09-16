@@ -1,45 +1,83 @@
 import AuthLogo from "@/assets/AuthLogo";
 import GoogleIcon from "@/assets/GoogleIcon";
-import LogoDark from "@/assets/images/logo/logo-dark.svg";
-import Logo from "@/assets/images/logo/logo.svg";
-import Input from "@/component/ui/form-elements/input";
-import PasswordInput from "@/component/ui/form-elements/password-input";
+import FormField from "@/component/form-field";
+import Button from "@/component/ui/button";
+import Checkbox from "@/component/ui/form-elements/checkbox";
 import Typography from "@/component/ui/typography";
 import { useLoginUserMutation } from "@/features/auth/auth-api";
 import { getSignupLink } from "@/routes/router-link";
-import React, { useEffect, useState } from "react";
-import { CiUser } from "react-icons/ci";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-type FormDataType = {
+import * as Yup from "yup";
+
+type FormData = {
   username: string;
   password: string;
 };
 
-const initialState: FormDataType = {
+const initialState: FormData = {
   username: "",
   password: "",
 };
 
+const validationSchema = Yup.object({
+  username: Yup.string().required("Username name is required"),
+  password: Yup.string().required("Password name is required"),
+});
+
 const SignIn = () => {
-  const [formData, setFormData] = useState<FormDataType>({ ...initialState });
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({
+    resolver: yupResolver(validationSchema as any),
+    defaultValues: initialState,
+    mode: "onChange",
+  });
 
   const [userLogin, { isError, error: loginError }] = useLoginUserMutation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  // Preload stored credentials from localStorage
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    const storedPassword = localStorage.getItem("password");
 
-    if (error) setError(null);
-  };
+    if (storedUsername && storedPassword) {
+      setValue("username", storedUsername);
+      setValue("password", storedPassword);
+      setRememberMe(true);
+    }
+  }, [setValue]);
 
-  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    userLogin({ identifier: formData.username, password: formData.password });
+  // Form submission handler
+  const onSubmit = async (data: FormData) => {
+    try {
+      if (rememberMe) {
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("password", data.password);
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
+
+      await userLogin({
+        identifier: data?.username,
+        password: data?.password,
+      }).unwrap();
+
+      reset();
+    } catch (errorRes) {
+      reset(undefined, { keepValues: true });
+    }
   };
 
   useEffect(() => {
@@ -51,98 +89,104 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="rounded-sm bg-white h-screen flex items-center justify-center">
-        <div className="flex flex-wrap items-center h-full">
-          <div className="hidden w-full xl:block xl:w-1/2">
-            <div className="py-17.5 px-26 text-center">
-              <Link className="mb-5.5 inline-block" to="/">
-                <img className="hidden dark:block" src={Logo} alt="Logo" />
-                <img className="dark:hidden" src={LogoDark} alt="Logo" />
-              </Link>
+      <div className="grid lg:grid-cols-2">
+        <div className="hidden lg:flex flex-col justify-center items-center border-r border-stroke">
+          <Link className="mb-1 text-start w-[60%]" to="/">
+            <Typography variant="h2">Sync-WorkBench</Typography>
+          </Link>
 
-              <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
-              </p>
+          <Typography
+            variant="p"
+            className="text-start text-textGray w-[60%] font-light"
+          >
+            A comprehensive HRMS should provide features for employee
+            management, performance tracking, time and attendance, payroll,
+            communication, and compliance.
+          </Typography>
 
-              <span className="mt-15 inline-block">
-                <AuthLogo />
-              </span>
-            </div>
-          </div>
+          <span className="mt-15 inline-block">
+            <AuthLogo />
+          </span>
+        </div>
 
-          <div className="w-full flex items-center h-full border-stroke xl:w-1/2 xl:border-l-2">
-            <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Start for free</span>
-              <Typography variant="h4" className="mb-9">
-                Sign In to Sync-Workbench
-              </Typography>
+        <div className="rounded-sm bg-white h-screen flex items-center justify-center">
+          <div className="w-full md:w-[80%] p-12 sm:p-12.5 md:p-30 lg:p-5">
+            {/* <span className="mb-1.5 block font-medium">Start for free</span> */}
+            <Typography variant="h3" className="mb-3">
+              Sign In to Sync-Workbench
+            </Typography>
 
-              <form onSubmit={(e) => handleSignIn(e)} className="space-y-4">
-                <div className="space-y-4">
-                  <Input
-                    label="Username"
-                    name="username"
-                    value={formData?.username}
-                    onChange={handleChange}
-                    required
-                    icon={<CiUser size={18} />}
-                  />
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-4">
+                <FormField
+                  formType="input"
+                  label="Username"
+                  control={control}
+                  name="username"
+                  error={errors?.username?.message}
+                  required
+                />
 
-                  <PasswordInput
-                    label="Password"
-                    name="password"
-                    value={formData?.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                <FormField
+                  formType="password"
+                  control={control}
+                  label="Password"
+                  name="password"
+                  error={errors?.password?.message}
+                  required
+                />
+              </div>
 
-                <div className="mb-5">
-                  {error && (
-                    <div
-                      role="alert"
-                      className={
-                        "alert flex items-center justify-between text-dangerColor gap-1 text-red-600 rounded-sm px-1 mb-2"
-                      }
-                    >
-                      <div className="text-sm font-medium flex gap-1 items-center">
-                        {error}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setError("")}
-                        className=""
-                      >
-                        <FaTimes size={12} />
-                      </button>
+              <div className="mb-5">
+                {error && (
+                  <div
+                    role="alert"
+                    className={
+                      "alert flex items-center justify-between gap-1 text-danger rounded-sm px-1 mb-2"
+                    }
+                  >
+                    <div className="text-sm font-medium flex gap-1 items-center">
+                      {error}
                     </div>
-                  )}
 
-                  <input
-                    type="submit"
-                    value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
+                    <button type="button" onClick={() => setError("")}>
+                      <FaTimes size={12} />
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between mb-2.5 mt-5">
+                  <Checkbox
+                    label="Remember me"
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
+
+                  <Typography variant="link">Forgot your password?</Typography>
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2 text-base hover:bg-opacity-50">
-                  <span>
-                    <GoogleIcon />
-                  </span>
-                  Sign in with Google
-                </button>
+                <Button fullWidth type="submit" loading={isSubmitting}>
+                  Sign In
+                </Button>
+              </div>
 
-                <div className="mt-6 text-center">
-                  <p>
-                    Don’t have any account?{" "}
+              <Button leftSection={<GoogleIcon />} variant="outline" fullWidth>
+                Sign in with Google
+              </Button>
+
+              <div className="mt-6 text-center">
+                <Typography
+                  variant="p"
+                  className="flex items-center justify-center gap-1"
+                >
+                  Don’t have any account?{" "}
+                  <Typography variant="link">
                     <Link to={getSignupLink()} className="text-primary">
                       Sign Up
                     </Link>
-                  </p>
-                </div>
-              </form>
-            </div>
+                  </Typography>
+                </Typography>
+              </div>
+            </form>
           </div>
         </div>
       </div>

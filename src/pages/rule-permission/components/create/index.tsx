@@ -43,14 +43,14 @@ const CreateRolePermission = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
-  const handlePermissionChange = (module: string) => (access: string) => {
-    setFormState((prevState) => {
-      const updatedPermissions = prevState.permissions.map((permission) =>
-        permission.module === module ? { ...permission, access } : permission
-      );
-      return { ...prevState, permissions: updatedPermissions };
-    });
-  };
+  // const handlePermissionChange = (module: string) => (access: string) => {
+  //   setFormState((prevState) => {
+  //     const updatedPermissions = prevState.permissions.map((permission) =>
+  //       permission.module === module ? { ...permission, access } : permission
+  //     );
+  //     return { ...prevState, permissions: updatedPermissions };
+  //   });
+  // };
 
   return (
     <>
@@ -95,12 +95,6 @@ const CreateRolePermission = ({ onClose }: { onClose: () => void }) => {
             <MultiSelect
               label="Assign Users"
               name="users"
-              options={
-                [
-                  /* Add options to select users from API */
-                ]
-              }
-              value={formState.users}
               onChange={handleSelectChange("users")}
             />
 
@@ -118,14 +112,14 @@ const CreateRolePermission = ({ onClose }: { onClose: () => void }) => {
                     <MultiSelect
                       name={`${contentType?.apiID}-permission`}
                       placeholder={`Select ${contentType?.apiID} permission`}
-                      value={
-                        formState.permissions.find(
-                          (permission) => permission.module === module
-                        )?.access || ""
-                      }
-                      onChange={(e) =>
-                        handlePermissionChange(module)(e.target.value)
-                      }
+                      // value={
+                      //   formState.permissions.find(
+                      //     (permission) => permission.module === module
+                      //   )?.access || ""
+                      // }
+                      // onChange={(e) =>
+                      //   handlePermissionChange(module)(e.target.value)
+                      // }
                       options={[
                         { label: "Create", value: "create" },
                         { label: "Delete", value: "delete" },

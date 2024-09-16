@@ -1,16 +1,19 @@
 import AuthLogo from "@/assets/AuthLogo";
-import Input from "@/component/ui/form-elements/input";
-import PasswordInput from "@/component/ui/form-elements/password-input";
+import FormField from "@/component/form-field";
+import Button from "@/component/ui/button";
+import Typography from "@/component/ui/typography";
 import { useRegistrationUserMutation } from "@/features/auth/auth-api";
-import { Checkbox } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
 
-interface FormDataType {
+interface FormData {
   username: string;
   email: string;
+  phone: string;
   confirmed: boolean;
   first_name: string;
   last_name: string;
@@ -19,9 +22,10 @@ interface FormDataType {
   re_enter_password: string;
 }
 
-const initialState: FormDataType = {
+const initialState: FormData = {
   username: "",
   email: "",
+  phone: "",
   confirmed: false,
   date_of_birth: null,
   first_name: "",
@@ -30,26 +34,61 @@ const initialState: FormDataType = {
   re_enter_password: "",
 };
 
-const SignUp = () => {
-  const [formData, setFormData] = useState<FormDataType>({ ...initialState });
+const validationSchema = Yup.object({
+  username: Yup.string().required("Username is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: Yup.string()
+    .matches(
+      /^\+880[1-9][0-9]{8,9}$/,
+      "Phone number must start with +880 and be followed by 9 or 10 digits"
+    )
+    .required("Phone number is required"),
+  confirmed: Yup.boolean().oneOf(
+    [true],
+    "You must accept the Terms and Conditions"
+  ),
+  first_name: Yup.string().required("First name is required"),
+  last_name: Yup.string().required("Last name is required"),
+  date_of_birth: Yup.date()
+    .nullable()
+    .max(new Date(), "Date of birth cannot be in the future")
+    .typeError("Invalid date"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters long"),
+  re_enter_password: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Re-entering password is required"),
+});
+
+const SignIn = () => {
   const [error, setError] = useState<string | null>("");
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({
+    resolver: yupResolver(validationSchema as any),
+    defaultValues: initialState,
+    mode: "onChange",
+  });
 
   const [registration, { isError, error: loginError }] =
     useRegistrationUserMutation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  // Form submission handler
+  const onSubmit = async (data: FormData) => {
+    try {
+      await registration(data).unwrap();
 
-    if (error) setError(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    registration(formData);
+      reset();
+    } catch (errorRes) {
+      reset(undefined, { keepValues: true });
+    }
   };
 
   useEffect(() => {
@@ -61,175 +100,154 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="rounded-sm bg-white h-screen flex items-center justify-center">
-        <div className="flex flex-wrap items-center h-full">
-          <div className="hidden w-full xl:block xl:w-1/2">
-            <div className="py-17.5 px-26 text-center">
-              <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign Up to Sync-Workspace
-              </h2>
+      <div className="grid lg:grid-cols-2">
+        <div className="hidden lg:flex flex-col justify-center items-center border-r border-stroke">
+          <Link className="mb-1 text-start w-[60%]" to="/">
+            <Typography variant="h2">Sync-WorkBench</Typography>
+          </Link>
 
-              <span className="mt-15 inline-block">
-                <AuthLogo />
-              </span>
-            </div>
-          </div>
+          <Typography
+            variant="p"
+            className="text-start text-textGray w-[60%] font-light"
+          >
+            A comprehensive HRMS should provide features for employee
+            management, performance tracking, time and attendance, payroll,
+            communication, and compliance.
+          </Typography>
 
-          <div className="w-full flex items-center h-full border-stroke xl:w-1/2 xl:border-l-2">
-            <div className="w-full">
-              <h2 className="mb-5 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign In to Sync-Workbench
-              </h2>
+          <span className="mt-15 inline-block">
+            <AuthLogo />
+          </span>
+        </div>
 
-              <form onSubmit={(e) => handleSubmit(e)} className="space-y-4">
-                <div className="space-y-4">
-                  <Input
-                    type="text"
-                    label="Username"
-                    name="username"
-                    value={formData?.username}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
+        <div className="rounded-sm bg-white h-screen flex items-center justify-center">
+          <div className="w-full md:w-[80%] p-12 sm:p-12.5 md:p-30 lg:p-5">
+            {/* <span className="mb-1.5 block font-medium">Start for free</span> */}
+            <Typography variant="h3" className="mb-3">
+              Sign In to Sync-Workbench
+            </Typography>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid gap-4">
+                <FormField
+                  formType="input"
+                  control={control}
+                  label="Username"
+                  name="username"
+                  placeholder="Enter your full name"
+                  error={errors?.username?.message}
+                  required
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    formType="input"
+                    control={control}
+                    label="First Name"
+                    name="first_name"
+                    placeholder="Enter your first name"
+                    error={errors?.first_name?.message}
                     required
                   />
-
-                  <div className="flex gap-5">
-                    <Input
-                      type="text"
-                      label="First Name"
-                      name="first_name"
-                      value={formData?.first_name}
-                      onChange={handleChange}
-                      placeholder="Enter your full name"
-                      required
-                    />
-                    <Input
-                      type="text"
-                      name="last_name"
-                      value={formData?.last_name}
-                      onChange={handleChange}
-                      label="Last Name"
-                      placeholder="Enter your full name"
-                      required
-                    />
-                  </div>
-
-                  <Input
-                    type="text"
-                    name="email"
-                    value={formData?.email}
-                    onChange={handleChange}
-                    label="Email"
-                    placeholder="Enter your full name"
+                  <FormField
+                    formType="input"
+                    control={control}
+                    name="last_name"
+                    label="Last Name"
+                    placeholder="Enter your last name"
+                    error={errors?.last_name?.message}
                     required
                   />
-                  <DateInput
-                    value={formData?.date_of_birth}
-                    name="date_of_birth"
-                    onChange={(date) =>
-                      setFormData((prev) => ({ ...prev, date_of_birth: date }))
+                </div>
+                <FormField
+                  formType="input"
+                  control={control}
+                  name="email"
+                  label="Email"
+                  placeholder="Enter your full name"
+                  error={errors?.email?.message}
+                  required
+                />
+                <FormField
+                  formType="input"
+                  control={control}
+                  name="phone"
+                  label="Phone Number"
+                  error={errors?.phone?.message}
+                  required
+                />
+
+                <FormField
+                  formType="date"
+                  control={control}
+                  name="date_of_birth"
+                  label="Date of Birth"
+                  placeholder="Enter Date of Birth"
+                  error={errors?.date_of_birth?.message}
+                />
+                <FormField
+                  formType="password"
+                  control={control}
+                  label="Password"
+                  name="password"
+                  placeholder="Enter Your Password"
+                  error={errors?.password?.message}
+                  required
+                />
+                <FormField
+                  formType="password"
+                  control={control}
+                  label="Re-Enter Password"
+                  name="re_enter_password"
+                  placeholder="Re-Enter Your Password"
+                  error={errors?.re_enter_password?.message}
+                  required
+                />
+                <FormField
+                  formType="checkbox"
+                  control={control}
+                  name="confirmed"
+                  label="I accept the Terms and Conditions"
+                  error={errors?.confirmed?.message}
+                />
+              </div>
+
+              <div className="mb-5">
+                {error && (
+                  <div
+                    role="alert"
+                    className={
+                      "alert flex items-center justify-between gap-1 text-danger rounded-sm px-1 mb-2"
                     }
-                    styles={{
-                      input: { height: "45px" },
-                    }}
-                    label="Date of Birth"
-                    placeholder="Enter Date of Birth"
-                  />
-                  <PasswordInput
-                    label="Password"
-                    name="password"
-                    placeholder="Enter Your Password"
-                    value={formData?.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <PasswordInput
-                    label="Re-Enter Password"
-                    name="re_enter_password"
-                    placeholder="Re-Enter Your Password"
-                    value={formData?.re_enter_password}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <Checkbox label="I accept the Terms and Conditions" />
-                </div>
-
-                <div className="mb-5">
-                  {error && (
-                    <div
-                      role="alert"
-                      className={
-                        "alert flex items-center justify-between text-dangerColor gap-1 text-red-600 rounded-sm px-1 mb-2"
-                      }
-                    >
-                      <div className="text-sm font-medium flex gap-1 items-center">
-                        {error}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setError("")}
-                        className=""
-                      >
-                        <FaTimes size={12} />
-                      </button>
+                  >
+                    <div className="text-sm font-medium flex gap-1 items-center">
+                      {error}
                     </div>
-                  )}
 
-                  <input
-                    type="submit"
-                    value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
-                  />
-                </div>
+                    <button type="button" onClick={() => setError("")}>
+                      <FaTimes size={12} />
+                    </button>
+                  </div>
+                )}
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray px-4 py-2 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta4 dark:hover:bg-opacity-50">
-                  <span>
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_191_13499)">
-                        <path
-                          d="M19.999 10.2217C20.0111 9.53428 19.9387 8.84788 19.7834 8.17737H10.2031V11.8884H15.8266C15.7201 12.5391 15.4804 13.162 15.1219 13.7195C14.7634 14.2771 14.2935 14.7578 13.7405 15.1328L13.7209 15.2571L16.7502 17.5568L16.96 17.5774C18.8873 15.8329 19.9986 13.2661 19.9986 10.2217"
-                          fill="#4285F4"
-                        />
-                        <path
-                          d="M10.2055 19.9999C12.9605 19.9999 15.2734 19.111 16.9629 17.5777L13.7429 15.1331C12.8813 15.7221 11.7248 16.1333 10.2055 16.1333C8.91513 16.1259 7.65991 15.7205 6.61791 14.9745C5.57592 14.2286 4.80007 13.1801 4.40044 11.9777L4.28085 11.9877L1.13101 14.3765L1.08984 14.4887C1.93817 16.1456 3.24007 17.5386 4.84997 18.5118C6.45987 19.4851 8.31429 20.0004 10.2059 19.9999"
-                          fill="#34A853"
-                        />
-                        <path
-                          d="M4.39899 11.9777C4.1758 11.3411 4.06063 10.673 4.05807 9.99996C4.06218 9.32799 4.1731 8.66075 4.38684 8.02225L4.38115 7.88968L1.19269 5.4624L1.0884 5.51101C0.372763 6.90343 0 8.4408 0 9.99987C0 11.5589 0.372763 13.0963 1.0884 14.4887L4.39899 11.9777Z"
-                          fill="#FBBC05"
-                        />
-                        <path
-                          d="M10.2059 3.86663C11.668 3.84438 13.0822 4.37803 14.1515 5.35558L17.0313 2.59996C15.1843 0.901848 12.7383 -0.0298855 10.2059 -3.6784e-05C8.31431 -0.000477834 6.4599 0.514732 4.85001 1.48798C3.24011 2.46124 1.9382 3.85416 1.08984 5.51101L4.38946 8.02225C4.79303 6.82005 5.57145 5.77231 6.61498 5.02675C7.65851 4.28118 8.9145 3.87541 10.2059 3.86663Z"
-                          fill="#EB4335"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_191_13499">
-                          <rect width="20" height="20" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </span>
-                  Sign in with Google
-                </button>
+                <Button fullWidth type="submit" loading={isSubmitting}>
+                  Sign In
+                </Button>
+              </div>
 
-                <div className="mt-6 text-center">
-                  <p>
-                    Don’t have any account?{" "}
+              <div className="mt-6 text-center">
+                <Typography
+                  variant="p"
+                  className="flex items-center justify-center gap-1"
+                >
+                  Have any account?{" "}
+                  <Typography variant="link">
                     <Link to={"/"} className="text-primary">
-                      Sign Up
+                      Sign In
                     </Link>
-                  </p>
-                </div>
-              </form>
-            </div>
+                  </Typography>
+                </Typography>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -237,4 +255,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

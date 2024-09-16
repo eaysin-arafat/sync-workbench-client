@@ -1,7 +1,7 @@
 import { PasswordInput as MantinePasswordInput } from "@mantine/core";
 import React from "react";
 
-type PasswordInputProps = {
+export interface PasswordInputProps {
   label?: string;
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,38 +14,44 @@ type PasswordInputProps = {
   required?: boolean;
   className?: string;
   onClick?: () => void;
-};
+}
 
-const PasswordInput = ({
-  placeholder = "",
-  label,
-  error,
-  required,
-  disabled,
-  name,
-  onChange,
-  onClick,
-  readOnly,
-  id,
-  value,
-  ...props
-}: PasswordInputProps) => {
-  return (
-    <MantinePasswordInput
-      name={name}
-      value={value}
-      onChange={onChange}
-      styles={{ label: { fontWeight: 500 } }}
-      onClick={onClick}
-      disabled={disabled}
-      placeholder={placeholder ? placeholder : `Enter ${label?.toLowerCase()}`}
-      id={id}
-      readOnly={readOnly}
-      error={error}
-      withAsterisk={required}
-      {...props}
-    />
-  );
-};
+const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
+  (props, ref) => {
+    const {
+      placeholder = "",
+      label,
+      error,
+      required,
+      disabled,
+      name,
+      onChange,
+      onClick,
+      readOnly,
+      id,
+      value,
+    } = props;
+    return (
+      <MantinePasswordInput
+        ref={ref}
+        name={name}
+        value={value}
+        label={label}
+        onChange={onChange}
+        styles={{ label: { fontWeight: 500 } }}
+        onClick={onClick}
+        disabled={disabled}
+        placeholder={
+          placeholder ? placeholder : `Enter ${label?.toLowerCase()}`
+        }
+        id={id}
+        readOnly={readOnly}
+        error={error}
+        withAsterisk={required}
+        {...props}
+      />
+    );
+  }
+);
 
 export default PasswordInput;

@@ -1,5 +1,5 @@
 import { styles } from "@/utils/cn";
-import Typography from "../../typography";
+import Typography from "../typography";
 
 // Not Found Component props
 type Props = {

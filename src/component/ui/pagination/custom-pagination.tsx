@@ -6,11 +6,11 @@ import Select from "../form-elements/select";
 
 // Define the types for the component props
 interface CustomPaginationProps {
-  totalItemsCount: number;
-  itemsPerPage: number;
-  onPageChange: (pageNumber: number, pageSize: number) => void;
-  currentPage: number; // Add currentPage to props
-  meta: {
+  totalItemsCount?: number;
+  itemsPerPage?: number;
+  onPageChange?: (pageNumber: number, pageSize: number) => void;
+  currentPage?: number; // Add currentPage to props
+  meta?: {
     pagination: {
       page: number;
       pageSize: number;
@@ -25,7 +25,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   totalItemsCount,
   itemsPerPage,
   onPageChange,
-  currentPage, // Destructure currentPage from props
+  currentPage = 1, // Destructure currentPage from props
   meta,
 }) => {
   const [activePage, setActivePage] = useState<number>(currentPage);
@@ -36,7 +36,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   // Handle page change
   const handlePageChange = (pageNumber: number) => {
     setActivePage(pageNumber);
-    onPageChange(pageNumber, itemsCountPerPage);
+    if (onPageChange) onPageChange(pageNumber, itemsCountPerPage);
   };
 
   // Adjust the event type or value handling according to the Select component's behavior
@@ -54,7 +54,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
 
     const newPageSize = parseInt(newValue, 10);
     setItemsCountPerPage(newPageSize);
-    onPageChange(1, newPageSize); // reset to page 1 when changing page size
+    if (onPageChange) onPageChange(1, newPageSize);
   };
 
   return (
@@ -76,7 +76,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
       <ReactPagination
         activePage={activePage}
         itemsCountPerPage={itemsCountPerPage}
-        totalItemsCount={totalItemsCount}
+        totalItemsCount={totalItemsCount ?? 0}
         pageRangeDisplayed={3}
         onChange={handlePageChange}
         innerClass={"flex gap-1 select-none border border-stroke rounded-sm"}

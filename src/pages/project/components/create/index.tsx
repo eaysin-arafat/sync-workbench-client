@@ -87,17 +87,16 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
     e.preventDefault();
     const payload: EmployeeFormType = {
       ...formState,
-      department_id: Number(formState?.department_id),
-      position_id: Number(formState?.position_id),
-      user_info: Number(formState?.user_info),
+      department_id: formState?.department_id,
+      position_id: formState?.position_id,
+      user_info: formState?.user_info,
       attendances: formState?.attendances?.map((attendance) =>
         Number(attendance)
       ),
       documents: formState?.documents?.map((document) => Number(document)),
-      manager_id: Number(formState?.manager),
-      departments: formState?.employee_of_departments?.map((department) =>
-        Number(department)
-      ),
+      // departments: formState?.employee_of_departments?.map((department) =>
+      //   Number(department)
+      // ),
       projects: formState?.projects?.map((project) => Number(project)),
       tasks: formState?.tasks?.map((task) => Number(task)),
       leaves: formState?.leaves?.map((leave) => Number(leave)),
@@ -127,21 +126,12 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
                 options={userOptions || undefined}
               />
 
-              <DateInput
-                label="Date of Hire"
-                name="date_of_hire"
-                type="date"
-                value={formState.date_of_hire || undefined}
-                onChange={(date) =>
-                  setFormState((prev) => ({ ...prev, date_of_hire: date }))
-                }
-              />
+              <DateInput label="Date of Hire" name="date_of_hire" type="date" />
 
               <MultiSelect
                 label="Department"
                 name="employee_of_departments"
                 type="text"
-                value={formState.employee_of_departments || undefined}
                 options={departmentOptions || []}
                 onChange={handleSelectChange("employee_of_departments")}
               />
@@ -189,7 +179,6 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
               <CheckBox
                 label="Is Internship"
                 name="is_internship"
-                value={formState.is_internship}
                 onChange={handleChange}
               />
             </div>
@@ -212,7 +201,7 @@ const CreateEmployee = ({ onClose }: { onClose: () => void }) => {
               <MultiSelect
                 label="Departments"
                 id="departments"
-                options={formState.departments || []}
+                // options={formState.department_id || []}
                 onChange={handleSelectChange("departments")}
               />
               <MultiSelect

@@ -1,6 +1,6 @@
 import FormField from "@/component/form-field";
 import { Button } from "@mantine/core";
-import useDepartmentForm from "./useDepartmentForm";
+import useDepartmentForm from "../hooks/useDepartmentForm";
 
 const CreateDepartment = ({
   onClose,
